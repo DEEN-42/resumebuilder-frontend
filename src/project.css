@@ -1,0 +1,768 @@
+/* Base Styles */
+.resume-builder-container {
+    min-height: 100vh;
+    background: #f8fafc;
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1e293b;
+}
+
+/* Header Styles */
+.resume-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.resume-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Home Button */
+.home-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.home-button:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.template-selector {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    background: white;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 160px;
+    box-sizing: border-box;
+}
+
+.template-selector:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ai-suggestions-btn,
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    box-sizing: border-box;
+}
+
+.ai-suggestions-btn {
+    background: #8b5cf6;
+    color: white;
+}
+
+.ai-suggestions-btn:hover {
+    background: #7c3aed;
+}
+
+.download-btn {
+    background: #10b981;
+    color: white;
+}
+
+.download-btn:hover {
+    background: #059669;
+}
+
+/* Zoom Controls - FIXED */
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.zoom-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 4px;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 0;
+    /* Add this to ensure padding doesn't affect icon visibility */
+}
+
+.zoom-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+/* Explicit icon styling */
+.zoom-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2.5px;
+}
+
+.zoom-btn:hover svg {
+    stroke: #1e293b; }
+/* REMOVED THE PROBLEMATIC :before PSEUDO-ELEMENTS */
+/* The icons will now come from the Lucide React components */
+
+.zoom-level {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+.zoom-reset-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+.zoom-reset-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+/* Main Content Layout - Increased form panel width */
+.builder-content {
+    display: flex;
+    height: calc(100vh - 70px);
+    gap: 0;
+    overflow: hidden;
+}
+
+.form-panel {
+    width: 45%;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.preview-panel {
+    width: 55%;
+    background: #f8fafc;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+/* A4 Preview Container */
+.preview-container {
+    transform-origin: top center;
+    transition: transform 0.3s ease;
+}
+
+.a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    max-width: 210mm;
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 20mm;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.a4-page * {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.a4-page>* {
+    margin-bottom: 0.5rem;
+}
+
+.a4-page>*:last-child {
+    margin-bottom: 0;
+}
+
+/* Form Component Styles - FIXED */
+.form-section {
+    background: white;
+    padding: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Prevent content overflow */
+}
+
+.form-section:hover {
+    background: #fafbfc;
+}
+
+.form-section h3 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* FIXED INPUT STYLES */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    background: white;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    font-weight: 400;
+    box-sizing: border-box;
+    /* This is crucial */
+    max-width: 100%;
+    /* Prevent overflow */
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-field::placeholder {
+    color: #9ca3af;
+}
+
+/* FIXED TEXTAREA STYLES */
+.textarea-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 80px;
+    background: white;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    font-weight: 400;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* This is crucial */
+    max-width: 100%;
+    /* Prevent overflow */
+}
+
+.textarea-field:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.textarea-field::placeholder {
+    color: #9ca3af;
+}
+
+/* FIXED GRID STYLES */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    box-sizing: border-box;
+}
+
+.grid-2>* {
+    min-width: 0;
+    /* Allow flex items to shrink */
+    box-sizing: border-box;
+}
+
+.add-button {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    color: #6b7280;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    box-sizing: border-box;
+    /* This is crucial */
+}
+
+.add-button:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.remove-button {
+    color: #ef4444;
+    font-size: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.remove-button:hover {
+    color: #dc2626;
+}
+
+/* Style Settings */
+.style-settings {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+    box-sizing: border-box;
+}
+
+.style-settings h4 {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    box-sizing: border-box;
+}
+
+.style-grid>* {
+    min-width: 0;
+    /* Allow grid items to shrink */
+    box-sizing: border-box;
+}
+
+.style-grid label {
+    display: block;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.style-grid input[type="number"],
+.style-grid select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: white;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    /* This is crucial */
+}
+
+.style-grid input[type="number"]:focus,
+.style-grid select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.style-grid input[type="color"] {
+    width: 100%;
+    height: 2rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    /* This is crucial */
+}
+
+.style-grid input[type="color"]:hover {
+    border-color: #3b82f6;
+}
+
+/* Checkbox and Radio Button Styles */
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 0.5rem;
+    accent-color: #3b82f6;
+}
+
+/* Label styles */
+label {
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* FIXED FILE INPUT STYLES */
+input[type="file"] {
+    width: 100%;
+    padding: 3rem 1rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    background: #f9fafb;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    box-sizing: border-box;
+    /* This is crucial */
+}
+
+input[type="file"]:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Enhanced Scrollbar */
+.form-panel::-webkit-scrollbar,
+.preview-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.form-panel::-webkit-scrollbar-track,
+.preview-panel::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.form-panel::-webkit-scrollbar-thumb,
+.preview-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.form-panel::-webkit-scrollbar-thumb:hover,
+.preview-panel::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .form-panel {
+        width: 55%;
+    }
+
+    .preview-panel {
+        width: 45%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .builder-content {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .form-panel,
+    .preview-panel {
+        width: 100%;
+        min-height: 50vh;
+    }
+
+    .resume-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .resume-header h1 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .zoom-controls {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .builder-content {
+        gap: 0;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    .a4-page {
+        padding: 15mm;
+    }
+
+    .style-grid {
+        grid-template-columns: 1fr;
+        /* Stack on mobile */
+    }
+}
+
+/* Professional form sections styling */
+.form-section:first-child {
+    border-top: none;
+}
+
+/* Better focus states for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Loading states */
+.form-section {
+    position: relative;
+}
+
+/* Print styles */
+@media print {
+    .a4-page {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        max-width: 210mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        transform: none !important;
+        page-break-after: always;
+        border-radius: 0 !important;
+    }
+
+    .preview-container {
+        transform: none !important;
+    }
+
+    .a4-page:last-child {
+        page-break-after: auto;
+    }
+}
+
+/* Additional professional touches */
+.template-selector option {
+    padding: 0.5rem;
+}
+
+/* Better button states */
+.ai-suggestions-btn:active,
+.download-btn:active {
+    transform: translateY(1px);
+}
+
+/* Form validation styles */
+.input-field.error,
+.textarea-field.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-field.success,
+.textarea-field.success {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.page-break-container {
+    width: 595px;
+    min-height: 842px;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: white;
+    margin-bottom: 20px;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+}
+
+.preview-container {
+    transform-origin: top center;
+    transition: transform 0.3s ease;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+}
+
+.iitkgp-resume {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    background-color: white;
+}
+
+/* Ensure PDF preview containers are visible */
+.preview-panel .page-break-container {
+    visibility: visible !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+/* Final container fixes */
+.page-break-container {
+    width: 595px;
+    min-height: 842px;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: white;
+    margin: 0 auto 20px;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+    transform: none !important;
+    zoom: 1 !important;
+    overflow: visible !important;
+}
+
+.preview-container .page-break-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ADDITIONAL OVERFLOW FIXES */
+* {
+    box-sizing: border-box;
+}
+
+.form-panel * {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Ensure no horizontal scrolling in form panel */
+.form-panel {
+    overflow-x: hidden;
+}
+
+/* Additional safety for input containers */
+.input-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.input-container>* {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+/* Header Left Section */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.home-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #cbd5e1 !important;
+    /* More visible border */
+    border-radius: 6px;
+    background: #f1f5f9 !important;
+    /* Light gray background */
+    color: #334155 !important;
+    /* Dark text color */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 1rem;
+    /* Add some spacing */
+}
+
+.home-button:hover {
+    background: #e2e8f0 !important;
+    /* Slightly darker on hover */
+    border-color: #94a3b8 !important;
+}
+
+.home-button svg {
+    width: 20px;
+    height: 20px;
+    stroke: #334155;
+    /* Ensure icon is visible */ }
