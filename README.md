@@ -11,7 +11,7 @@ Create, edit, and download stunning CVs with real-time preview, AI-powered sugge
 ## ✨ Features
 
 - 🖋️ **Template-Based Resume Editor**: Choose from **4 predefined layouts** and customize in real-time.
-- 🧠 **AI Suggestions**: Integrated with the **OpenAI API** to provide intelligent section-wise improvement tips.
+- 🧠 **AI Suggestions**: Integrated with the **Gemini API** to provide intelligent section-wise improvement tips.
 - ✅ **ATS Score Evaluation**: Get feedback on how well your CV aligns with Applicant Tracking Systems.
 - 📦 **Download as PDF**: Export your final CV in a ready-to-share, high-quality PDF format.
 - 🧾 **Real-Time Preview**: Instantly see how your resume looks as you type.
@@ -25,7 +25,7 @@ Create, edit, and download stunning CVs with real-time preview, AI-powered sugge
 - **Frontend**: React, Tailwind CSS  
 - **Backend**: Node.js, Express.js  
 - **Database**: MongoDB  
-- **AI Integration**: OpenAI API  
+- **AI Integration**: Gemini API  
 - **Authentication**: Bcrypt (password hashing), JWT (access/refresh tokens)
 
 ---
@@ -56,7 +56,6 @@ Create a `.env` file in the root directory and add the following:
 
 ```
 REACT_APP_BACKEND_URL=your_backend_api_url
-REACT_APP_OPENAI_API_KEY=your_openai_api_key
 ```
 
 > **Note:** This is the frontend repo. Ensure the backend is running and properly configured.
