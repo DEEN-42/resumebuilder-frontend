@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePageBreak, PageBreakWrapper } from '../../components/ResumeLayout/ResumeLayout';
+import { usePageBreak, PageBreakWrapper } from '../../Components/ResumeLayout/ResumeLayout';
 import './IITKGPTemplate.css';
 
 const IITKGPTemplate = ({ data, styles = {} }) => {

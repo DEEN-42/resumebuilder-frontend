@@ -8,15 +8,15 @@ import JohnDoeTemplate from './templates/JohnDoe/JohnDoeTemplate.jsx';
 import { handleResumeDownload } from './handleResumeDownload.jsx';
 import './project.css';
 // Form Components
-import PersonalInfoForm from './components/PersonalInfoForm/PersonalInfoForm.jsx';
-import EducationForm from './components/EducationForm/EducationForm.jsx';
-import InternshipsForm from './components/InternshipsForm/InternshipsForm.jsx';
-import ProjectsForm from './components/ProjectsForm/ProjectsForm.jsx';
-import SkillsForm from './components/SkillsForm/SkillsForm.jsx';
-import AwardsForm from './components/AwardsForm/AwardsForm.jsx';
-import ExtraAcademicActivitiesForm from './components/ExtraCurricularForm/ExtraAcademicActivitiesForm.jsx';
-import CourseworkForm from './components/CourseworkForm/CourseworkForm.jsx';
-import PositionsOfResponsibilityForm from './components/PositionsOfResponsibilityForm/PositionsOfResponsibilityForm.jsx';
+import PersonalInfoForm from './Components/PersonalInfoForm/PersonalInfoForm.jsx';
+import EducationForm from './Components/EducationForm/EducationForm.jsx';
+import InternshipsForm from './Components/InternshipsForm/InternshipsForm.jsx';
+import ProjectsForm from './Components/ProjectsForm/ProjectsForm.jsx';
+import SkillsForm from './Components/SkillsForm/SkillsForm.jsx';
+import AwardsForm from './Components/AwardsForm/AwardsForm.jsx';
+import ExtraAcademicActivitiesForm from './Components/ExtraCurricularForm/ExtraAcademicActivitiesForm.jsx';
+import CourseworkForm from './Components/CourseworkForm/CourseworkForm.jsx';
+import PositionsOfResponsibilityForm from './Components/PositionsOfResponsibilityForm/PositionsOfResponsibilityForm.jsx';
 
 // Main Application
 const ResumeBuilder = () => {

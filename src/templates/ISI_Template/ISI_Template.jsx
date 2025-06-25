@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePageBreak, PageBreakWrapper } from '../../components/ResumeLayout/ResumeLayout';
+import { usePageBreak, PageBreakWrapper } from '../../Components/ResumeLayout/ResumeLayout';
 import './ISI_Template.css';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 
