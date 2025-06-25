@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePageBreak, PageBreakWrapper } from '../../Components/ResumeLayout/ResumeLayout';
+import { usePageBreak, PageBreakWrapper } from '../../components/ResumeLayout/ResumeLayout';
 import './JohnDoeTemplate.css';
 
 const JohnDoeTemplate = ({ data, styles = {} }) => {
