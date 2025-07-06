@@ -12,7 +12,7 @@ const SharingSection = ({id}) => {
   const navigate = useNavigate();
   
   // API base URL
-  const API_BASE_URL = 'http://localhost:3030';
+  const API_BASE_URL = 'https://resumebuilder-backend-dv7t.onrender.com';
 
   // Fetch shared users list
   const fetchSharedUsers = async () => {

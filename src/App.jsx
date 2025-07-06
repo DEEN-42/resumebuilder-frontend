@@ -55,7 +55,7 @@ const scheduleTokenRenewal = (token) => {
     setTimeout(async () => {
       try {
         const currentToken = localStorage.getItem('token');
-        const response = await fetch('YOUR_BACKEND_URL/renew-token', {
+        const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/renew-token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

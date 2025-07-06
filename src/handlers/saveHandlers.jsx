@@ -41,7 +41,7 @@ export const createSaveHandlers = (
         // Use socket endpoint for real-time updates
         const endpoint = `/resumes/update/${id}`;
         // console.log(currentData);
-        const response = await fetch(`http://localhost:3030${endpoint}`, {
+        const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com${endpoint}`, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,

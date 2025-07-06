@@ -146,7 +146,7 @@ const Login = () => {
     setError('');
 
     try {
-      const result = await fetch('http://localhost:3030/users/google-login', {
+      const result = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/google-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ const Login = () => {
         setLoading(false);
         return;
       }
-      const response = await fetch('http://localhost:3030/users/login', {
+      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password : formData.password }),

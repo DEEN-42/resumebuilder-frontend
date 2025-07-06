@@ -27,7 +27,7 @@ const ATSScorer = ({ resumeData, resumeId }) => {
         throw new Error('Authentication token not found');
       }
 
-      const response = await fetch('http://localhost:3030/ai/atsScore', {
+      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/ai/atsScore', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

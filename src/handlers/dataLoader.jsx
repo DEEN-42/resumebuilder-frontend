@@ -28,7 +28,7 @@ export const createDataLoader = (
         // Use socket endpoint if available
         const endpoint = `/resumes/load/${id}`;
         
-        const response = await fetch(`http://localhost:3030${endpoint}`, {
+        const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com${endpoint}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

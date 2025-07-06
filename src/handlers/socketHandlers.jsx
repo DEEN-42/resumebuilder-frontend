@@ -18,7 +18,7 @@ export const createSocketHandlers = (
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const newSocket = io('http://localhost:3030', {
+    const newSocket = io('https://resumebuilder-backend-dv7t.onrender.com', {
       auth: { token },
       query: { resumeId: id }
     });

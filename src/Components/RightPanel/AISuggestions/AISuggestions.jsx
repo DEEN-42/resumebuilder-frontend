@@ -79,7 +79,7 @@ const AISuggestions = ({ resumeId, resumeData, dataHandlers }) => {
       };
       // console.log(requestBody);
 
-      const response = await fetch(`http://localhost:3030/ai/${selectedSection}`, {
+      const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/ai/${selectedSection}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
