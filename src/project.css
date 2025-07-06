@@ -1,12 +1,43 @@
-/* Base Styles */
+/* Global Reset - Add this at the very top of your CSS */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body and HTML reset for full width */
+html,
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #f8fafc;
+}
+
+/* Root container (usually #root or your app container) */
+#root {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container - Force full width */
 .resume-builder-container {
+    width: 100vw;
     min-height: 100vh;
     background: #f8fafc;
     font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #1e293b;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* Header Styles */
+/* Header - Full width */
 .resume-header {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -18,6 +49,9 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100vw;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .resume-header h1 {
@@ -30,25 +64,37 @@
     gap: 1rem;
 }
 
-/* Home Button */
+/* Header Left Section */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .home-button {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #cbd5e1 !important;
     border-radius: 6px;
-    background: white;
-    color: #64748b;
+    background: #f1f5f9 !important;
+    color: #334155 !important;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin-right: 1rem;
 }
 
 .home-button:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #94a3b8;
+    background: #e2e8f0 !important;
+    border-color: #94a3b8 !important;
+}
+
+.home-button svg {
+    width: 20px;
+    height: 20px;
+    stroke: #334155;
 }
 
 .header-actions {
@@ -109,13 +155,13 @@
     background: #059669;
 }
 
-/* Zoom Controls - FIXED */
+/* Zoom Controls */
 .zoom-controls {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.25rem;
-    background: #f1f5f9;
+    background: #b7d4f3 !important;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     box-sizing: border-box;
@@ -137,7 +183,6 @@
     font-weight: bold;
     box-sizing: border-box;
     padding: 0;
-    /* Add this to ensure padding doesn't affect icon visibility */
 }
 
 .zoom-btn:hover {
@@ -145,7 +190,6 @@
     color: #1e293b;
 }
 
-/* Explicit icon styling */
 .zoom-btn svg {
     width: 16px;
     height: 16px;
@@ -154,9 +198,8 @@
 }
 
 .zoom-btn:hover svg {
-    stroke: #1e293b; }
-/* REMOVED THE PROBLEMATIC :before PSEUDO-ELEMENTS */
-/* The icons will now come from the Lucide React components */
+    stroke: #1e293b;
+}
 
 .zoom-level {
     font-size: 0.75rem;
@@ -184,39 +227,82 @@
     color: #1e293b;
 }
 
-/* Main Content Layout - Increased form panel width */
-.builder-content {
+/* THREE-PANEL LAYOUT - Force full width */
+.builder-content-with-sharing {
     display: flex;
     height: calc(100vh - 70px);
+    width: 100vw;
     gap: 0;
     overflow: hidden;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .form-panel {
-    width: 45%;
+    width: 40%;
+    min-width: 350px;
+    max-width: 1200px;
     background: #ffffff;
     border-right: 1px solid #e2e8f0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .preview-panel {
-    width: 55%;
+    flex: 1;
     background: #f8fafc;
     overflow: auto;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 2rem 1rem;
+    padding: 1rem;
     box-sizing: border-box;
+    margin: 0;
 }
 
-/* A4 Preview Container */
+/* SHARING PANEL - Compact and optimized */
+.sharing-panel {
+    width: 375px;
+    min-width: 280px;
+    max-width: 380px;
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 1rem;
+    margin: 0;
+}
+
+.sharing-panel h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.sharing-panel .sharing-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* A4 Preview Container - Optimized for larger preview */
 .preview-container {
     transform-origin: top center;
     transition: transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .a4-page {
@@ -249,15 +335,14 @@
     margin-bottom: 0;
 }
 
-/* Form Component Styles - FIXED */
+/* Form Component Styles */
 .form-section {
     background: white;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-bottom: 1px solid #f1f5f9;
     transition: all 0.2s ease;
     box-sizing: border-box;
     overflow: hidden;
-    /* Prevent content overflow */
 }
 
 .form-section:hover {
@@ -273,7 +358,7 @@
     border-bottom: 2px solid #e2e8f0;
 }
 
-/* FIXED INPUT STYLES */
+/* Input Styles */
 .input-field {
     width: 100%;
     padding: 0.75rem;
@@ -286,9 +371,7 @@
     transition: all 0.2s ease;
     font-weight: 400;
     box-sizing: border-box;
-    /* This is crucial */
     max-width: 100%;
-    /* Prevent overflow */
 }
 
 .input-field:focus {
@@ -301,7 +384,7 @@
     color: #9ca3af;
 }
 
-/* FIXED TEXTAREA STYLES */
+/* Textarea Styles */
 .textarea-field {
     width: 100%;
     padding: 0.75rem;
@@ -316,9 +399,7 @@
     font-weight: 400;
     font-family: inherit;
     box-sizing: border-box;
-    /* This is crucial */
     max-width: 100%;
-    /* Prevent overflow */
 }
 
 .textarea-field:focus {
@@ -331,7 +412,7 @@
     color: #9ca3af;
 }
 
-/* FIXED GRID STYLES */
+/* Grid Styles */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -341,7 +422,6 @@
 
 .grid-2>* {
     min-width: 0;
-    /* Allow flex items to shrink */
     box-sizing: border-box;
 }
 
@@ -358,7 +438,6 @@
     font-weight: 500;
     margin-top: 0.5rem;
     box-sizing: border-box;
-    /* This is crucial */
 }
 
 .add-button:hover {
@@ -406,7 +485,6 @@
 
 .style-grid>* {
     min-width: 0;
-    /* Allow grid items to shrink */
     box-sizing: border-box;
 }
 
@@ -429,7 +507,6 @@
     color: #1e293b;
     transition: all 0.2s ease;
     box-sizing: border-box;
-    /* This is crucial */
 }
 
 .style-grid input[type="number"]:focus,
@@ -448,7 +525,6 @@
     cursor: pointer;
     transition: all 0.2s ease;
     box-sizing: border-box;
-    /* This is crucial */
 }
 
 .style-grid input[type="color"]:hover {
@@ -469,7 +545,7 @@ label {
     font-size: 0.875rem;
 }
 
-/* FIXED FILE INPUT STYLES */
+/* File Input Styles */
 input[type="file"] {
     width: 100%;
     padding: 3rem 1rem;
@@ -482,7 +558,6 @@ input[type="file"] {
     transition: all 0.2s ease;
     text-align: center;
     box-sizing: border-box;
-    /* This is crucial */
 }
 
 input[type="file"]:hover {
@@ -499,47 +574,249 @@ input[type="file"]:focus {
 
 /* Enhanced Scrollbar */
 .form-panel::-webkit-scrollbar,
-.preview-panel::-webkit-scrollbar {
+.preview-panel::-webkit-scrollbar,
+.sharing-panel::-webkit-scrollbar {
     width: 6px;
 }
 
 .form-panel::-webkit-scrollbar-track,
-.preview-panel::-webkit-scrollbar-track {
+.preview-panel::-webkit-scrollbar-track,
+.sharing-panel::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
 
 .form-panel::-webkit-scrollbar-thumb,
-.preview-panel::-webkit-scrollbar-thumb {
+.preview-panel::-webkit-scrollbar-thumb,
+.sharing-panel::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
 }
 
 .form-panel::-webkit-scrollbar-thumb:hover,
-.preview-panel::-webkit-scrollbar-thumb:hover {
+.preview-panel::-webkit-scrollbar-thumb:hover,
+.sharing-panel::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
-/* Responsive Design */
-@media (max-width: 1400px) {
-    .form-panel {
-        width: 55%;
+/* Save Status Indicator Styles */
+.save-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.save-status.saving {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.save-status.saved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.save-status.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    cursor: pointer;
+}
+
+.save-status.error:hover {
+    background-color: #f1b2b7;
+    transform: translateY(-1px);
+}
+
+.save-status svg {
+    flex-shrink: 0;
+}
+
+.update-indicator {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+/* Connection Status Indicator Styles */
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.connection-status.connected {
+    background-color: #d4edda;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb;
+}
+
+.connection-status.disconnected {
+    background-color: #f8d7da;
+    color: #721c24 !important;
+    border: 1px solid #f5c6cb;
+}
+
+.connection-status svg {
+    flex-shrink: 0;
+}
+
+/* Connected Users Indicator Styles */
+.connected-users {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #e7f3ff;
+    color: #0066cc !important;
+    border: 1px solid #b3d9ff;
+    min-width: 100px;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.connected-users:hover {
+    background-color: #cce7ff;
+    transform: translateY(-1px);
+}
+
+.connected-users svg {
+    flex-shrink: 0;
+}
+
+/* Page Break Container Styles */
+.page-break-container {
+    width: 595px;
+    min-height: 842px;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: white;
+    margin: 0 auto 20px;
+    position: relative;
+    break-after: page;
+    page-break-after: always;
+    transform: none !important;
+    zoom: 1 !important;
+    overflow: visible !important;
+}
+
+.preview-container .page-break-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-container {
+    transform-origin: top center;
+    transition: transform 0.3s ease;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.iitkgp-resume {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    background-color: white;
+}
+
+.preview-panel .page-break-container {
+    visibility: visible !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+/* Animation for spinning save icon */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
     }
 
-    .preview-panel {
-        width: 45%;
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive Design - Updated breakpoints */
+@media (max-width: 1600px) {
+    .form-panel {
+        width: 32%;
+        min-width: 320px;
+    }
+
+    .sharing-panel {
+        width: 260px;
+        min-width: 260px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .form-panel {
+        width: 35%;
+        min-width: 300px;
+    }
+
+    .sharing-panel {
+        width: 240px;
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .form-panel {
+        width: 40%;
+        min-width: 280px;
+    }
+
+    .sharing-panel {
+        width: 220px;
+        min-width: 220px;
     }
 }
 
 @media (max-width: 1024px) {
-    .builder-content {
+    .builder-content-with-sharing {
         flex-direction: column;
         height: auto;
     }
 
     .form-panel,
-    .preview-panel {
+    .preview-panel,
+    .sharing-panel {
         width: 100%;
-        min-height: 50vh;
+        min-width: auto;
+        max-width: none;
+        min-height: 40vh;
+    }
+
+    .sharing-panel {
+        min-height: 20vh;
     }
 
     .resume-header {
@@ -563,11 +840,15 @@ input[type="file"]:focus {
         justify-content: center;
     }
 
-    .builder-content {
+    .builder-content-with-sharing {
         gap: 0;
     }
 
     .form-section {
+        padding: 1rem;
+    }
+
+    .sharing-panel {
         padding: 1rem;
     }
 
@@ -577,7 +858,25 @@ input[type="file"]:focus {
 
     .style-grid {
         grid-template-columns: 1fr;
-        /* Stack on mobile */
+    }
+
+    .save-status,
+    .connection-status,
+    .connected-users {
+        font-size: 12px;
+        padding: 4px 8px;
+        min-width: 80px;
+    }
+
+    .save-status svg,
+    .connection-status svg,
+    .connected-users svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .update-indicator {
+        font-size: 10px;
     }
 }
 
@@ -647,122 +946,332 @@ textarea:focus-visible {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.page-break-container {
-    width: 595px;
-    min-height: 842px;
-    padding: 24px;
+/* Additional full-width enforcement */
+.resume-builder-container,
+.resume-builder-container *,
+.builder-content-with-sharing,
+.resume-header {
     box-sizing: border-box;
-    background-color: white;
-    margin-bottom: 20px;
+}
+
+/* Ensure no container has auto margins */
+.resume-builder-container,
+.builder-content-with-sharing {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Force full viewport width */
+.resume-builder-container {
     position: relative;
-    break-after: page;
-    page-break-after: always;
+    left: 0;
+    right: 0;
+    max-width: 100vw;
 }
 
-.preview-container {
-    transform-origin: top center;
-    transition: transform 0.3s ease;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-radius: 4px;
+/* Override any inherited styles */
+.resume-builder-container,
+.resume-header,
+.builder-content-with-sharing {
+    width: 100vw !important;
+    max-width: 100vw !important;
 }
+/* Add these styles to your existing project.css file */
 
-.iitkgp-resume {
-    box-sizing: border-box;
-    width: 100%;
-    height: auto;
-    background-color: white;
-}
-
-/* Ensure PDF preview containers are visible */
-.preview-panel .page-break-container {
-    visibility: visible !important;
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
-}
-
-/* Final container fixes */
-.page-break-container {
-    width: 595px;
-    min-height: 842px;
-    padding: 24px;
-    box-sizing: border-box;
-    background-color: white;
-    margin: 0 auto 20px;
-    position: relative;
-    break-after: page;
-    page-break-after: always;
-    transform: none !important;
-    zoom: 1 !important;
-    overflow: visible !important;
-}
-
-.preview-container .page-break-container {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* ADDITIONAL OVERFLOW FIXES */
-* {
-    box-sizing: border-box;
-}
-
-.form-panel * {
-    max-width: 100%;
-    overflow-wrap: break-word;
-}
-
-/* Ensure no horizontal scrolling in form panel */
-.form-panel {
-    overflow-x: hidden;
-}
-
-/* Additional safety for input containers */
-.input-container {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.input-container>* {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-/* Header Left Section */
-.header-left {
+/* Update the sharing-panel class to support tabbed interface */
+.sharing-panel {
+    width: 375px;
+    min-width: 280px;
+    max-width: 380px;
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    overflow: hidden; /* Changed from overflow-y: auto */
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0; /* Remove padding as tabs will handle it */
+    margin: 0;
+    height: 100%; /* Ensure full height */
 }
 
-.home-button {
+/* RightPanel specific styles - Add these new styles */
+.right-panel {
+    width: 375px;
+    min-width: 280px;
+    max-width: 380px;
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: all 0.3s ease;
+}
+
+.panel-tabs {
+    display: flex;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.tab-button {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid #cbd5e1 !important;
-    /* More visible border */
-    border-radius: 6px;
-    background: #f1f5f9 !important;
-    /* Light gray background */
-    color: #334155 !important;
-    /* Dark text color */
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-right: 1rem;
-    /* Add some spacing */
+    border-bottom: 2px solid transparent;
+    box-sizing: border-box;
+    font-family: inherit;
 }
 
-.home-button:hover {
-    background: #e2e8f0 !important;
-    /* Slightly darker on hover */
-    border-color: #94a3b8 !important;
+.tab-button:hover {
+    color: #334155;
+    background: #f1f5f9;
 }
 
-.home-button svg {
-    width: 20px;
-    height: 20px;
-    stroke: #334155;
-    /* Ensure icon is visible */ }
+.tab-button.active {
+    color: #3b82f6;
+    background: #ffffff;
+    border-bottom-color: #3b82f6;
+}
+
+.tab-button svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 0;
+    padding: 1rem; /* Add padding back for content */
+}
+
+/* Custom scrollbar for panel content */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Focus states for accessibility */
+.tab-button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Content sections within tabs */
+.tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
+.tab-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-content .content-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Animation for tab content changes */
+.panel-content > * {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Update responsive design for RightPanel */
+@media (max-width: 1600px) {
+    .right-panel,
+    .sharing-panel {
+        width: 320px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .right-panel,
+    .sharing-panel {
+        width: 280px;
+        min-width: 260px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .right-panel,
+    .sharing-panel {
+        width: 260px;
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .right-panel,
+    .sharing-panel {
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+        height: auto;
+        min-height: 400px;
+        border-left: none;
+        border-top: 1px solid #e2e8f0;
+        overflow: visible;
+    }
+    
+    .panel-content {
+        overflow-y: visible;
+        min-height: 300px;
+    }
+    
+    .panel-tabs {
+        justify-content: center;
+    }
+    
+    .tab-button {
+        min-width: 120px;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .right-panel,
+    .sharing-panel {
+        min-height: 350px;
+        border-radius: 0;
+    }
+    
+    .tab-button {
+        padding: 0.625rem 1rem;
+        font-size: 0.8rem;
+        min-width: 100px;
+        gap: 0.375rem;
+    }
+    
+    .tab-button span {
+        display: none;
+    }
+    
+    .tab-button svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .panel-content {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .right-panel,
+    .sharing-panel {
+        min-height: 320px;
+    }
+    
+    .tab-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        min-width: 80px;
+    }
+    
+    .tab-button svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .panel-content {
+        padding: 0.5rem;
+    }
+}
+
+/* Loading states */
+.panel-content.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Enhanced visual hierarchy */
+.right-panel {
+    box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Smooth transitions for responsive changes */
+@media (prefers-reduced-motion: no-preference) {
+    .right-panel,
+    .sharing-panel {
+        transition: width 0.3s ease, height 0.3s ease;
+    }
+    
+    .tab-button {
+        transition: all 0.2s ease;
+    }
+}
+
+/* Print styles */
+@media print {
+    .right-panel,
+    .sharing-panel {
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        height: auto;
+        overflow: visible;
+    }
+    
+    .panel-tabs {
+        display: none;
+    }
+    
+    .panel-content {
+        overflow: visible;
+        height: auto;
+    }
+}

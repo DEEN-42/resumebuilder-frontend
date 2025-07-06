@@ -1,79 +1,156 @@
-import React, { useState, useEffect } from 'react';
-import { Home, Wand2, Download, Eye, Plus, Minus } from 'lucide-react';
-import iitkgplogo from './assets/iitkgp_logo.png';
-import isikolkatalogo from './assets/isikolkata_logo.png';
-import IITKGPTemplate from './templates/IIT_KGP/IITKGPTemplate.jsx';
-import ISITemplate from './templates/ISI_Template/ISI_Template.jsx';
-import JohnDoeTemplate from './templates/JohnDoe/JohnDoeTemplate.jsx';
-import { handleResumeDownload } from './handleResumeDownload.jsx';
+// project.jsx - Updated version with sharing section
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { handleResumeDownload } from './handlers/handleResumeDownload.jsx';
 import './project.css';
+
+// Configuration imports
+import { getInitialGlobalStyles } from './config/globalStyles.jsx';
+import { getInitialResumeData } from './config/resumeData.jsx';
+import { getTemplatesConfig } from './config/templates.jsx';
+
+// Separated Components
+import Header from './Components/Header/Header.jsx';
+import Loading from './Components/Loading/Loading.jsx';
+import Error from './Components/Error/Error.jsx';
+import RightPanel from './Components/RightPanel/RightPanel.jsx';
+
 // Form Components
-import PersonalInfoForm from './Components/PersonalInfoForm/PersonalInfoForm.jsx';
-import EducationForm from './Components/EducationForm/EducationForm.jsx';
-import InternshipsForm from './Components/InternshipsForm/InternshipsForm.jsx';
-import ProjectsForm from './Components/ProjectsForm/ProjectsForm.jsx';
-import SkillsForm from './Components/SkillsForm/SkillsForm.jsx';
-import AwardsForm from './Components/AwardsForm/AwardsForm.jsx';
-import ExtraAcademicActivitiesForm from './Components/ExtraCurricularForm/ExtraAcademicActivitiesForm.jsx';
-import CourseworkForm from './Components/CourseworkForm/CourseworkForm.jsx';
-import PositionsOfResponsibilityForm from './Components/PositionsOfResponsibilityForm/PositionsOfResponsibilityForm.jsx';
+import PersonalInfoForm from './Components/FormSections/PersonalInfoForm/PersonalInfoForm.jsx';
+import EducationForm from './Components/FormSections/EducationForm/EducationForm.jsx';
+import InternshipsForm from './Components/FormSections/InternshipsForm/InternshipsForm.jsx';
+import ProjectsForm from './Components/FormSections/ProjectsForm/ProjectsForm.jsx';
+import SkillsForm from './Components/FormSections/SkillsForm/SkillsForm.jsx';
+import AwardsForm from './Components/FormSections/AwardsForm/AwardsForm.jsx';
+import ExtraAcademicActivitiesForm from './Components/FormSections/ExtraCurricularForm/ExtraAcademicActivitiesForm.jsx';
+import CourseworkForm from './Components/FormSections/CourseworkForm/CourseworkForm.jsx';
+import PositionsOfResponsibilityForm from './Components/FormSections/PositionsOfResponsibilityForm/PositionsOfResponsibilityForm.jsx';
+
+// Handler imports
+import { createResumeDataHandlers } from './handlers/resumeDataHandlers.jsx';
+import { createUIHandlers } from './handlers/uiHandlers.jsx';
+import { createSocketHandlers } from './handlers/socketHandlers.jsx';
+import { createSaveHandlers } from './handlers/saveHandlers.jsx';
+import { createDataLoader } from './handlers/dataLoader.jsx';
 
 // Main Application
 const ResumeBuilder = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  // UI States
   const [selectedTemplate, setSelectedTemplate] = useState('iitkg');
-  const [zoomLevel, setZoomLevel] = useState(70); // Default zoom level as percentage
+  const [zoomLevel, setZoomLevel] = useState(100);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [globalStyles, setGlobalStyles] = useState({
-    heading: {
-      fontSize: 16,
-      fontFamily: 'Arial',
-      color: '#000000',
-      bold: true,
-      italic: false,
-      underline: false
-    },
-    description: {
-      fontSize: 12,
-      fontFamily: 'Arial',
-      color: '#000000',
-      bold: false,
-      italic: false,
-      underline: false
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Socket.IO states
+  const [socket, setSocket] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectedUsers, setConnectedUsers] = useState([]);
+  const [lastUpdatedBy, setLastUpdatedBy] = useState(null);
+  
+  // Save status states
+  const [saveStatus, setSaveStatus] = useState('saved');
+  const [lastSaved, setLastSaved] = useState(null);
+  
+  // Refs for debouncing and preventing unnecessary saves
+  const saveTimeoutRef = useRef(null);
+  const lastSaveDataRef = useRef(null);
+  const isSavingRef = useRef(false);
+  const isUpdatingFromSocketRef = useRef(false);
+
+  // Configuration states - initialized from config modules
+  const [globalStyles, setGlobalStyles] = useState(getInitialGlobalStyles());
+  const [resumeData, setResumeData] = useState(getInitialResumeData());
+  const templates = getTemplatesConfig();
+
+  //SidePanel
+  const [activeSideTab, setActiveSideTab] = useState('share');
+  // Initialize handlers
+  const dataHandlers = createResumeDataHandlers(setResumeData);
+  
+  const saveHandlers = createSaveHandlers(
+    id,
+    selectedTemplate,
+    globalStyles,
+    resumeData,
+    setSaveStatus,
+    setLastSaved,
+    setError,
+    isSavingRef,
+    isUpdatingFromSocketRef,
+    lastSaveDataRef
+  );
+
+  const socketHandlers = createSocketHandlers(
+    id,
+    setSocket,
+    setIsConnected,
+    setConnectedUsers,
+    setLastUpdatedBy,
+    setResumeData,
+    setGlobalStyles,
+    setSelectedTemplate,
+    isUpdatingFromSocketRef
+  );
+
+  const uiHandlers = createUIHandlers(
+    setZoomLevel,
+    setSelectedTemplate,
+    setGlobalStyles,
+    navigate,
+    handleResumeDownload,
+    setIsDownloading,
+    resumeData,
+    saveHandlers.saveResumeData,
+    setActiveSideTab,
+    activeSideTab
+  );
+
+  const dataLoader = createDataLoader(
+    id,
+    setIsLoading,
+    setError,
+    setResumeData,
+    setGlobalStyles,
+    setSelectedTemplate,
+    setSaveStatus,
+    setLastSaved,
+    lastSaveDataRef,
+    templates,
+    globalStyles,
+    resumeData,
+    socketHandlers.initializeSocket
+  );
+
+  const handleGoHome = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  // Create debounced save function
+  const debouncedSave = useCallback(
+    saveHandlers.debouncedSave(saveTimeoutRef),
+    [saveHandlers.debouncedSave]
+  );
+
+  // Cleanup socket on unmount
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, [socket]);
+
+  // Load resume data when component mounts
+  useEffect(() => {
+    if (id) {
+      dataLoader.loadResumeData();
     }
-  });
-
-  const [resumeData, setResumeData] = useState({
-    personalInfo: {
-        name: '',
-        rollNo: '',
-        program: '',
-        specialization: '',
-        email: '',
-        contact: '',
-        linkedin: '',
-        github: '',
-        profilePicture: null,
-        institutelogo: iitkgplogo, // Default to IIT KGP logo
-      },
-    
-    education: [],
-    internships: [],
-    projects: [],
-    skills: [],
-    awards: [],
-    extraAcademicActivities: [],
-    coursework: [],
-    competitions: [],
-    position: [],
-    publications: [],
-    extracurricular: [],
-  });
-
-  const templates = {
-    iitkg: { name: 'IIT KGP Template', component: IITKGPTemplate, logo: iitkgplogo },
-    isikolkata: { name: 'ISI Template', component: ISITemplate, logo: isikolkatalogo },
-    JohnDoe: { name: 'John Doe Template', component: JohnDoeTemplate, logo: null }
-  };
+  }, [id]);
 
   // Effect to update institute logo when template changes
   useEffect(() => {
@@ -89,327 +166,116 @@ const ResumeBuilder = () => {
     }
   }, [selectedTemplate]);
 
-  const handlePersonalInfoChange = (field, value) => {
-    setResumeData(prev => ({
-      ...prev,
-      personalInfo: { ...prev.personalInfo, [field]: value }
-    }));
-  };
-
-  const handleEducationChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        education: [...prev.education, { year: '', degree: '', institute: '', cgpa: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        education: prev.education.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        education: prev.education.map((edu, i) => 
-          i === index ? { ...edu, [field]: value } : edu
-        )
-      }));
+  // Auto-save when data changes (modified to ignore socket updates)
+  useEffect(() => {
+    if (!isLoading && id && !isUpdatingFromSocketRef.current) {
+      debouncedSave();
     }
-  };
+  }, [resumeData, globalStyles, selectedTemplate, debouncedSave, isLoading, id]);
 
-  const handleInternshipsChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        internships: [...prev.internships, { title: '', company: '', duration: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        internships: prev.internships.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        internships: prev.internships.map((intern, i) => 
-          i === index ? { ...intern, [field]: value } : intern
-        )
-      }));
-    }
-  };
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
-  const handleProjectsChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        projects: [...prev.projects, { title: '', duration: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        projects: prev.projects.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        projects: prev.projects.map((project, i) => 
-          i === index ? { ...project, [field]: value } : project
-        )
-      }));
-    }
-  };
-
-  const handleSkillsChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        skills: [...prev.skills, { title: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        skills: prev.skills.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        skills: prev.skills.map((skill, i) => 
-          i === index ? { ...skill, [field]: value } : skill
-        )
-      }));
-    }
-    console.log(resumeData.skills);
-  };
-
-  const handleAwardsChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        awards: [...prev.awards, { title: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        awards: prev.awards.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        awards: prev.awards.map((award, i) => 
-          i === index ? { ...award, [field]: value } : award
-        )
-      }));
-    }
-  };
-
-  const handleExtraAcademicActivitiesChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        extraAcademicActivities: [...prev.extraAcademicActivities, { title: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        extraAcademicActivities: prev.extraAcademicActivities.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        extraAcademicActivities: prev.extraAcademicActivities.map((activity, i) => 
-          i === index ? { ...activity, [field]: value } : activity
-        )
-      }));
-    }
-  };
-
-  const handleCourseworkChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        coursework: [...prev.coursework, { title: '', description: '' }]
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        coursework: prev.coursework.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        coursework: prev.coursework.map((course, i) => 
-          i === index ? { ...course, [field]: value } : course
-        )
-      }));
-    }
-  };
-
-  const handlePositionsOfResponsibilityChange = (index, field, value) => {
-    if (index === 'add') {
-      setResumeData(prev => ({
-        ...prev,
-        position: [...prev.position, { title: '', time: '', description: '' }] // Changed 'duration' to 'time'
-      }));
-    } else if (field === 'remove') {
-      setResumeData(prev => ({
-        ...prev,
-        position: prev.position.filter((_, i) => i !== index)
-      }));
-    } else {
-      setResumeData(prev => ({
-        ...prev,
-        position: prev.position.map((pos, i) => 
-          i === index ? { ...pos, [field]: value } : pos
-        )
-      }));
-    }
-  };
-
-  const handleStyleChange = (category, property, value) => {
-    setGlobalStyles(prev => ({
-      ...prev,
-      [category]: { ...prev[category], [property]: value }
-    }));
-    console.log(globalStyles);
-  };
-
-  const handleAISuggestions = () => {
-    console.log('Resume Data:', resumeData);
-    console.log('Global Styles:', globalStyles);
-    console.log('Selected Template:', selectedTemplate);
-  };
-
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 10, 150)); // Max zoom 150%
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 10, 30)); // Min zoom 30%
-  };
-
-  const handleZoomReset = () => {
-    setZoomLevel(70); // Reset to default
-  };
-
-  const handleDownload = async () => {
-    try {
-      await handleResumeDownload(setIsDownloading, resumeData);
-    } catch (error) {
-      console.error('Download failed:', error);
-    }
-  }
-  
-  const returnHandler = () => {
-    console.log("Return handler called");
-    // You can add navigation logic here later
-  };
-  
   const TemplateComponent = templates[selectedTemplate].component;
+
+  // Show loading state
+  if (isLoading) {
+    return <Loading message="Loading resume..." />;
+  }
+
+  // Show error state
+  if (error && !resumeData.personalInfo.name) {
+    return (
+      <Error
+        error={`Error loading resume: ${error}`}
+        onRetry={dataLoader.loadResumeData}
+        onGoHome={handleGoHome}
+        title="Failed to load resume"
+      />
+    );
+  }
 
   return (
     <div className="resume-builder-container">
-      {/* Header */}
-      <div className="resume-header">
-      <div className="header-left">
-        <button 
-          onClick={returnHandler}
-          className="home-button"
-          title="Return to Home"
-          style={{
-            background: 'red',
-            border: '2px solid black',
-            padding: '10px'
-          }}
-        >
-          <Home size={20} />
-        </button>
-        <h1>Resume Builder</h1>
-      </div>
-        <div className="header-actions">
-          <select
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-            className="template-selector"
-          >
-            {Object.entries(templates).map(([key, template]) => (
-              <option key={key} value={key}>{template.name}</option>
-            ))}
-          </select>
-          <button
-            onClick={handleAISuggestions}
-            className="ai-suggestions-btn"
-          >
-            <Wand2 size={16} />
-            AI Suggestions
-          </button>
-          <div className="zoom-controls">
-            <button
-              onClick={handleZoomOut}
-              className="zoom-btn"
-              title="Zoom Out"
-            >
-              <Minus size={16} stroke="#64748b" />
-            </button>
-            <span className="zoom-level">{zoomLevel}%</span>
-            <button
-              onClick={handleZoomIn}
-              className="zoom-btn"
-              title="Zoom In"
-            >
-              <Plus size={16} stroke="#64748b" />
-            </button>
-            <button
-              onClick={handleZoomReset}
-              className="zoom-reset-btn"
-              title="Reset Zoom"
-            >
-              Reset
-            </button>
-          </div>
-          <button 
-            className="download-btn"
-            onClick={handleDownload}
-            disabled={isDownloading}
-            style={{
-              opacity: isDownloading ? 0.6 : 1,
-              cursor: isDownloading ? 'not-allowed' : 'pointer'
-            }}
-          >
-            <Download size={16} />
-            {isDownloading ? 'Generating PDF...' : 'Download'}
-          </button>
-        </div>
-      </div>
+      {/* Header - Extended to full width */}
+      <Header
+        // UI handlers
+        returnHandler={uiHandlers.returnHandler}
+        handleTemplateChange={uiHandlers.handleTemplateChange}
+        handleAISuggestions={uiHandlers.handleAISuggestions}
+        handleZoomIn={uiHandlers.handleZoomIn}
+        handleZoomOut={uiHandlers.handleZoomOut}
+        handleZoomReset={uiHandlers.handleZoomReset}
+        handleDownload={uiHandlers.handleDownload}
+        handleShare={uiHandlers.handleShare}
+        handleATSscore={uiHandlers.handleATSscore}
+        
+        // Save handlers
+        saveResumeData={saveHandlers.saveResumeData}
+        
+        // State
+        selectedTemplate={selectedTemplate}
+        templates={templates}
+        zoomLevel={zoomLevel}
+        isDownloading={isDownloading}
+        saveStatus={saveStatus}
+        lastSaved={lastSaved}
+        lastUpdatedBy={lastUpdatedBy}
+        isConnected={isConnected}
+        connectedUsers={connectedUsers}
+      />
 
-      <div className="builder-content">
+      <div className="builder-content-with-sharing">
         {/* Left Panel - Form */}
         <div className="form-panel">
           <PersonalInfoForm
+            id={id}
             data={resumeData.personalInfo}
-            onChange={handlePersonalInfoChange}
+            onChange={dataHandlers.handlePersonalInfoChange}
             styles={globalStyles}
-            onStyleChange={handleStyleChange}
+            onStyleChange={uiHandlers.handleStyleChange}
           />
-          <EducationForm data={resumeData.education} onChange={handleEducationChange} />
-          <InternshipsForm data={resumeData.internships} onChange={handleInternshipsChange} />
-          <ProjectsForm data={resumeData.projects} onChange={handleProjectsChange} />
-          <SkillsForm data={resumeData.skills} onChange={handleSkillsChange} />
-          <AwardsForm data={resumeData.awards} onChange={handleAwardsChange} />
+          <EducationForm 
+            data={resumeData.education} 
+            onChange={dataHandlers.handleEducationChange} 
+          />
+          <InternshipsForm 
+            data={resumeData.internships} 
+            onChange={dataHandlers.handleInternshipsChange} 
+          />
+          <ProjectsForm 
+            data={resumeData.projects} 
+            onChange={dataHandlers.handleProjectsChange} 
+          />
+          <SkillsForm 
+            data={resumeData.skills} 
+            onChange={dataHandlers.handleSkillsChange} 
+          />
+          <AwardsForm 
+            data={resumeData.awards} 
+            onChange={dataHandlers.handleAwardsChange} 
+          />
           <ExtraAcademicActivitiesForm 
             data={resumeData.extraAcademicActivities} 
-            onChange={handleExtraAcademicActivitiesChange} 
+            onChange={dataHandlers.handleExtraAcademicActivitiesChange} 
           />
           <CourseworkForm 
             data={resumeData.coursework} 
-            onChange={handleCourseworkChange} 
+            onChange={dataHandlers.handleCourseworkChange} 
           />
           <PositionsOfResponsibilityForm 
             data={resumeData.position} 
-            onChange={handlePositionsOfResponsibilityChange} 
+            onChange={dataHandlers.handlePositionsOfResponsibilityChange} 
           />
         </div>
 
-        {/* Right Panel - Preview */}
+        {/* Middle Panel - Preview */}
         <div className="preview-panel">
           <div 
             className="preview-container"
@@ -418,9 +284,16 @@ const ResumeBuilder = () => {
             <div>
               <TemplateComponent data={resumeData} styles={globalStyles} />
             </div>
-              
           </div>
         </div>
+
+        {/* Right Panel*/}
+        <RightPanel
+          id={id}
+          resumeData={resumeData}
+          activeTab={activeSideTab}
+          dataHandlers={dataHandlers}
+        />
       </div>
     </div>
   );

@@ -66,3 +66,95 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Add these styles to your global CSS file (e.g., globals.css, index.css, or App.css) */
+
+/* Reset for all elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Full viewport dimensions */
+html {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #f8fafc;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Root container (React root) */
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* If you have an App wrapper */
+.App {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Remove any container max-widths that might be applied by frameworks */
+.container,
+.main-container,
+.app-container {
+  max-width: none !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Reset for common Bootstrap/framework containers */
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+  max-width: none !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure no auto margins on main containers */
+main,
+.main,
+.main-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+}
+
+/* Additional safety for flexbox containers */
+.flex-container,
+.d-flex {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+/* Override any inherited max-width styles */
+body>*,
+#root>*,
+.App>* {
+  max-width: none !important;
+  width: 100vw !important;
+}

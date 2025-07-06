@@ -2,28 +2,70 @@ import React from 'react';
 import { Type, Palette, Bold, Italic, Underline, Upload, Image, Building } from 'lucide-react';
 import './PersonalInfoForm.css';
 
-const PersonalInfoForm = ({ data, onChange, styles, onStyleChange }) => {
-  const handleProfilePictureUpload = (e) => {
+const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
+  const handleProfilePictureUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        onChange('profilePicture', event.target.result);
-      };
-      reader.readAsDataURL(file);
+    const resumeId = id; 
+    const token = localStorage.getItem('token');
+  
+    if (!file || !resumeId) return;
+  
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+  
+      const res = await fetch(`http://localhost:3030/resumes/update/${resumeId}/upload`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}` // remove if not using auth
+        },
+        body: formData
+      });
+  
+      if (!res.ok) throw new Error('Image upload failed');
+  
+      const result = await res.json();
+      const imageUrl = result.url;
+  
+      onChange('profilePicture', imageUrl);
+    } catch (err) {
+      console.error('Profile picture upload error:', err);
+      alert('Failed to upload image.');
     }
   };
+  
 
-  const handleInstituteLogoUpload = (e) => {
+  const handleInstituteLogoUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        onChange('institutelogo', event.target.result);
-      };
-      reader.readAsDataURL(file);
+    const resumeId = id;
+    const token = localStorage.getItem('token'); 
+  
+    if (!file || !resumeId) return;
+  
+    try {
+      const formData = new FormData();
+      formData.append('image', file); // Field name must be "image" (matches multer config)
+  
+      const res = await fetch(`http://localhost:3030/resumes/update/${resumeId}/upload`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}` // Remove this line if no auth
+        },
+        body: formData
+      });
+  
+      if (!res.ok) throw new Error('Institute logo upload failed');
+  
+      const result = await res.json();
+      const imageUrl = result.url;
+  
+      onChange('institutelogo', imageUrl); // Save cloud URL in form state
+    } catch (err) {
+      console.error('Institute logo upload error:', err);
+      alert('Failed to upload institute logo.');
     }
   };
+  
 
   const StyleButton = ({ active, onClick, icon: Icon, label }) => (
     <button

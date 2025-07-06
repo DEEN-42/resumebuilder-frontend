@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import React, { useState } from 'react';
-
+import { showSuccess, showError, showWarning, showInfo } from '../utils/toast.jsx';
 // First, install the required dependencies:
 // npm install html2canvas jspdf
 
@@ -352,7 +352,7 @@ export const createHybridPDF = async (resumeContainerSelector = '.preview-contai
             // Add link annotation
             pdf.link(pdfX, pdfY, pdfLinkWidth, pdfLinkHeight, { url: fullUrl });
             
-            console.log(`Added link: ${link.text} -> ${fullUrl} at (${pdfX.toFixed(2)}, ${pdfY.toFixed(2)})`);
+            // console.log(`Added link: ${link.text} -> ${fullUrl} at (${pdfX.toFixed(2)}, ${pdfY.toFixed(2)})`);
           } catch (linkError) {
             console.warn(`Failed to add link: ${link.text}`, linkError);
           }
@@ -495,8 +495,7 @@ export const handleResumeDownload = async (setIsDownloading, resumeData = null, 
         logging: false,
         letterRendering: true
       });
-      
-      console.log('Download successful:', result);
+      showNotification("Download Successful", 'success');
       return result;
       
     } finally {
@@ -507,20 +506,23 @@ export const handleResumeDownload = async (setIsDownloading, resumeData = null, 
     
   } catch (error) {
     console.error('Download failed:', error);
-    alert(`Download failed: ${error.message}`);
+    showNotification("Download failed",'error');
     throw error;
   } finally {
     setIsDownloading(false);
   }
 };
 
-// Usage examples:
-//
-// Text-based PDF (guaranteed working links, may look different):
-// await handleResumeDownload(setIsDownloading, resumeData, currentZoom, 'text');
-//
-// Hybrid PDF (preserves design + working links):
-// await handleResumeDownload(setIsDownloading, resumeData, currentZoom, 'hybrid');
-//
-// Auto-detect best method:
-// await handleResumeDownload(setIsDownloading, resumeData, currentZoom, 'auto');
+const showNotification = (message, type) => {
+  if(type === 'error'){
+    showError(message);
+  } else if(type === 'success'){
+    showSuccess(message);
+  } else if(type === 'warning'){
+    showWarning(message);
+  } else if(type === 'info'){
+    showInfo(message);
+  } else {
+    alert(message); // Fallback only
+  }
+};
