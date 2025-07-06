@@ -5,7 +5,7 @@ import MainContent from './MainContent';
 import CreateResumeModal from './CreateResumeModal';
 import { useResumeDataforDashboard } from '../../hooks/useResumeData';
 import { useResumeActions } from '../../hooks/useResumeActions';
-import './Dashboard.css';
+import './dashboard.css';
 
 const Dashboard = ({ logout }) => {
   const [activeSection, setActiveSection] = useState('owned');
