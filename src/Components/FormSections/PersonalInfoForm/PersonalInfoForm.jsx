@@ -14,7 +14,7 @@ const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
       const formData = new FormData();
       formData.append('image', file);
   
-      const res = await fetch(`http://localhost:3030/resumes/update/${resumeId}/upload`, {
+      const res = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/update/${resumeId}/upload`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}` // remove if not using auth
@@ -46,7 +46,7 @@ const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
       const formData = new FormData();
       formData.append('image', file); // Field name must be "image" (matches multer config)
   
-      const res = await fetch(`http://localhost:3030/resumes/update/${resumeId}/upload`, {
+      const res = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/update/${resumeId}/upload`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}` // Remove this line if no auth
