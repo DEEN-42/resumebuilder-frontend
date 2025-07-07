@@ -72,44 +72,51 @@ Create the following `.env` files.
 #### `ResumeBuilder-backend/.env`
 
 ```env
-PORT=5000
+PORT = 3030
+# Database configuration
+DB_USERNAME=yourdbname
+DB_PASSWORD=yourdbpassword
+DB_CLUSTER_URL=yourdburl
+//jwt secret key
+JWT_SECRET=xxxxxxxx
+//cloudinery
+CLOUDINARY_CLOUD_NAME=xxxxxxxx
+CLOUDINARY_API_KEY=xxxxxxxxxxxxxx
+CLOUDINARY_API_SECRET=xxxxxxxxxxxxxxxxxxxxxxx
+//Gemini api key
+GOOGLE_API_KEY=xxxxxxxxxxxxxxxxxxxxx
+//Google oAuth
+GOOGLE_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GOOGLE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
+//nodemailer access
+EMAIL_USER=xxxxxxxxxxxxxxxxxxx
+EMAIL_PASS=xxxxxxxxxxxxxxxxxxxxxxx
+// frontend url
+FRONTEND_URL=https://resumebuilder-frontend-i6nn.vercel.app
 
-# MongoDB
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/resume-builder
-
-# Auth
-JWT_ACCESS_SECRET=super_secret_access_token
-JWT_REFRESH_SECRET=super_secret_refresh_token
-GOOGLE_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxx
-
-# AI (Gemini)
-GOOGLE_API_KEY=your_gemini_key_here
-
-# Email
-EMAIL_USER=your_gmail_or_ses_user
-EMAIL_PASS=your_email_app_password
 ```
 
 #### `resumebuilder-frontend/.env`
 
 ```env
-VITE_BACKEND_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your-client id
+
 ```
 
 ### 4. Run in Development Mode
 
 ```bash
 # In one terminal
-cd ResumeBuilder-backend
+cd backend
 npm run dev     # nodemon / ts-node / etc.
 
 # In another terminal
-cd resumebuilder-frontend
+cd frontend
 npm run dev     # Vite dev server
 ```
 
 Site available at **[http://localhost:5173](http://localhost:5173)** (default Vite port).
+In the frontend the backend url is directly used, please change it on the required port you are using accordingly
 
 ---
 
