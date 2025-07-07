@@ -1,4 +1,4 @@
-// project.jsx - Updated version with sharing section
+// project.jsx - Fixed version with proper socket management
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -61,14 +61,19 @@ const ResumeBuilder = () => {
   const lastSaveDataRef = useRef(null);
   const isSavingRef = useRef(false);
   const isUpdatingFromSocketRef = useRef(false);
+  
+  // **CRITICAL FIX**: Ref to track if socket is initialized
+  const socketInitializedRef = useRef(false);
+  const socketCleanupRef = useRef(null);
 
   // Configuration states - initialized from config modules
   const [globalStyles, setGlobalStyles] = useState(getInitialGlobalStyles());
   const [resumeData, setResumeData] = useState(getInitialResumeData());
   const templates = getTemplatesConfig();
 
-  //SidePanel
+  // SidePanel
   const [activeSideTab, setActiveSideTab] = useState('share');
+  
   // Initialize handlers
   const dataHandlers = createResumeDataHandlers(setResumeData);
   
@@ -123,7 +128,14 @@ const ResumeBuilder = () => {
     templates,
     globalStyles,
     resumeData,
-    socketHandlers.initializeSocket
+    // **CRITICAL FIX**: Pass the socket initialization function
+    () => {
+      if (!socketInitializedRef.current && id) {
+        console.log('Initializing socket from data loader');
+        socketInitializedRef.current = true;
+        socketCleanupRef.current = socketHandlers.initializeSocket();
+      }
+    }
   );
 
   const handleGoHome = useCallback(() => {
@@ -136,19 +148,47 @@ const ResumeBuilder = () => {
     [saveHandlers.debouncedSave]
   );
 
-  // Cleanup socket on unmount
+  // **CRITICAL FIX**: Proper socket cleanup effect
   useEffect(() => {
     return () => {
+      console.log('Component unmounting - cleaning up socket');
+      if (socketCleanupRef.current) {
+        socketCleanupRef.current();
+      }
       if (socket) {
         socket.disconnect();
       }
+      socketInitializedRef.current = false;
     };
-  }, [socket]);
+  }, []); // Empty dependency array - only run on mount/unmount
 
-  // Load resume data when component mounts
+  // **CRITICAL FIX**: Load resume data and initialize socket only once
   useEffect(() => {
-    if (id) {
+    if (id && !socketInitializedRef.current) {
+      console.log('Loading resume data and initializing socket for ID:', id);
       dataLoader.loadResumeData();
+    }
+  }, [id]); // Only depend on id
+
+  // **CRITICAL FIX**: Handle ID changes (when navigating to different resumes)
+  useEffect(() => {
+    // If ID changes, cleanup current socket and reinitialize
+    if (id && socketInitializedRef.current) {
+      console.log('Resume ID changed, reinitializing socket');
+      
+      // Cleanup current socket
+      if (socketCleanupRef.current) {
+        socketCleanupRef.current();
+      }
+      
+      // Reset flag and reinitialize
+      socketInitializedRef.current = false;
+      setIsLoading(true);
+      
+      // Small delay to ensure cleanup is complete
+      setTimeout(() => {
+        dataLoader.loadResumeData();
+      }, 100);
     }
   }, [id]);
 
@@ -293,6 +333,7 @@ const ResumeBuilder = () => {
           resumeData={resumeData}
           activeTab={activeSideTab}
           dataHandlers={dataHandlers}
+          connectedUsers= {connectedUsers}
         />
       </div>
     </div>

@@ -18,8 +18,7 @@ const AISuggestions = ({ resumeId, resumeData, dataHandlers }) => {
     { key: 'extraAcademicActivities', label: 'Extra Academic Activities', handler: dataHandlers.handleExtraAcademicActivitiesChange },
     { key: 'coursework', label: 'Coursework', handler: dataHandlers.handleCourseworkChange },
     { key: 'position', label: 'Positions of Responsibility', handler: dataHandlers.handlePositionsOfResponsibilityChange },
-    { key: 'extracurricular', label: 'Extracurricular Activities', handler: dataHandlers.handleExtracurricularChange },
-    { key: 'competitions', label: 'Competitions', handler: dataHandlers.handleCompetitionsChange },
+    // { key: 'competitions', label: 'Competitions', handler: dataHandlers.handleCompetitionsChange },
   ];
 
   // Reset selected item when section changes

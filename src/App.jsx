@@ -45,7 +45,7 @@ const scheduleTokenRenewal = (token) => {
     const decoded = jwtDecode(token);
     const currentTime = Date.now() / 1000;
     const expiryTime = decoded.exp;
-    const timeUntilRenewal = (expiryTime - currentTime - 240) * 1000; // renew 4 mins before expiry
+    const timeUntilRenewal = (expiryTime - currentTime - 180) * 1000; // renew 3 mins before expiry
     
     if (timeUntilRenewal <= 0) {
       logout();
@@ -55,7 +55,7 @@ const scheduleTokenRenewal = (token) => {
     setTimeout(async () => {
       try {
         const currentToken = localStorage.getItem('token');
-        const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/renew-token', {
+        const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/renew-token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ import AISuggestions from './AISuggestions/AISuggestions.jsx';
 import ATSScorer from './ATSScorer/ATSScorer.jsx';
 import './RightPanel.css';
 
-const RightPanel = ({ id, resumeData, activeTab, dataHandlers}) => {
+const RightPanel = ({ id, resumeData, activeTab, dataHandlers, connectedUsers}) => {
 
 
   const tabs = [
@@ -14,7 +14,7 @@ const RightPanel = ({ id, resumeData, activeTab, dataHandlers}) => {
       id: 'share',
       label: 'Share',
       icon: Share2,
-      component: <SharingSection id={id} />
+      component: <SharingSection id={id} connectedUsers={connectedUsers}/>
     },
     {
       id: 'ats',

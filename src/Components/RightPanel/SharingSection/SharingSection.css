@@ -712,3 +712,157 @@
         font-size: 0.8rem;
     }
 }
+/* Online/Offline Status Styling */
+
+/* Email avatar modifications for online/offline states */
+.email-avatar {
+    position: relative;
+}
+
+.email-avatar.online {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 2px 4px 0 rgba(16, 185, 129, 0.3);
+}
+
+.email-avatar.offline {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.3);
+    opacity: 0.8;
+}
+
+.email-avatar.offline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 158, 11, 0.2);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.email-avatar.offline .profile-picture {
+    filter: grayscale(30%) brightness(0.9);
+}
+
+.email-avatar.offline .initials {
+    color: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+    position: relative;
+}
+
+/* Status indicator dot */
+.status-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    z-index: 3;
+}
+
+.email-avatar.online .status-indicator {
+    background: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    animation: pulse-green 2s infinite;
+}
+
+.email-avatar.offline .status-indicator {
+    background: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* Shared email item modifications */
+.shared-email-item.online {
+    border-left: 3px solid #10b981;
+}
+
+.shared-email-item.offline {
+    border-left: 3px solid #f59e0b;
+    background: #f9fafb;
+}
+
+.shared-email-item.offline:hover {
+    background: #f3f4f6;
+}
+
+/* Text styling for offline users */
+.shared-email-item.offline .user-name {
+    color: #6b7280;
+    opacity: 0.8;
+}
+
+.shared-email-item.offline .user-email {
+    color: #9ca3af;
+    opacity: 0.7;
+}
+
+/* User status text */
+.user-status {
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.125rem;
+}
+
+.shared-email-item.online .user-status {
+    color: #10b981;
+}
+
+.shared-email-item.offline .user-status {
+    color: #f59e0b;
+}
+
+/* Animation for online status */
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* Hover effects for online/offline items */
+.shared-email-item.online:hover {
+    border-left-color: #059669;
+    box-shadow: 0 2px 8px 0 rgba(16, 185, 129, 0.15);
+}
+
+.shared-email-item.offline:hover {
+    border-left-color: #d97706;
+    box-shadow: 0 2px 8px 0 rgba(245, 158, 11, 0.15);
+}
+
+/* Remove button styling for offline users */
+.shared-email-item.offline .remove-button {
+    opacity: 0.8;
+}
+
+.shared-email-item.offline .remove-button:hover {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        bottom: 1px;
+        right: 1px;
+        border-width: 1.5px;
+    }
+
+    .user-status {
+        font-size: 0.6rem;
+    }
+}

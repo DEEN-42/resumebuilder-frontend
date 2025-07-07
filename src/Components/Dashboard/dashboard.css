@@ -212,7 +212,10 @@ body {
     color: #6b7280;
     margin-top: 0.25rem;
 }
-
+.header-buttons{
+    display: flex;
+    gap: 15px;
+}
 .create-button {
     display: flex;
     align-items: center;

@@ -3,7 +3,8 @@ import { Share2, Mail, X, Users, Plus, Trash2, UserPlus, RefreshCw } from 'lucid
 import './SharingSection.css';
 import { useNavigate } from 'react-router-dom';
 import { showSuccess, showError, showWarning, showInfo } from '../../../utils/toast.jsx';
-const SharingSection = ({id}) => {
+
+const SharingSection = ({id, connectedUsers}) => {
   const [emailInput, setEmailInput] = useState('');
   const [sharedUsers, setSharedUsers] = useState([]);
   const [isSharing, setIsSharing] = useState(false);
@@ -13,6 +14,11 @@ const SharingSection = ({id}) => {
   
   // API base URL
   const API_BASE_URL = 'https://resumebuilder-backend-dv7t.onrender.com';
+
+  // Function to check if a user is online
+  const isUserOnline = (email) => {
+    return connectedUsers && connectedUsers.includes(email);
+  };
 
   // Fetch shared users list
   const fetchSharedUsers = async () => {
@@ -328,11 +334,12 @@ const SharingSection = ({id}) => {
               const displayName = user.name || 'Unknown User';
               const displayEmail = user.email || 'Unknown email';
               const profilePicture = user.profilePicture;
+              const userOnline = isUserOnline(user.email);
               
               return (
-                <div key={index} className="shared-email-item">
+                <div key={index} className={`shared-email-item ${userOnline ? 'online' : 'offline'}`}>
                   <div className="email-info">
-                    <div className="email-avatar">
+                    <div className={`email-avatar ${userOnline ? 'online' : 'offline'}`}>
                       {profilePicture ? (
                         <img 
                           src={profilePicture} 
@@ -344,10 +351,14 @@ const SharingSection = ({id}) => {
                           {getUserInitials(displayName)}
                         </span>
                       )}
+                      <div className="status-indicator"></div>
                     </div>
                     <div className="email-details">
                       <div className="user-name">{displayName}</div>
                       <div className="user-email">{displayEmail}</div>
+                      <div className="user-status">
+                        {userOnline ? 'Online' : 'Offline'}
+                      </div>
                     </div>
                   </div>
                   <button

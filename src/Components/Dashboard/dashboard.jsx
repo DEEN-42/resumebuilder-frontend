@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
@@ -14,6 +14,7 @@ const Dashboard = ({ logout }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [shareEmail, setShareEmail] = useState('');
   const [showShareInput, setShowShareInput] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const navigate = useNavigate();
   
   const { resumeData, setResumeData } = useResumeDataforDashboard();
@@ -24,6 +25,70 @@ const Dashboard = ({ logout }) => {
     setShowShareInput,
     setExpandedResume
   );
+
+  const handleRefresh = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/getResumeList', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Update the resume data using the hook's update function
+      setResumeData(data);
+      
+      // Clear any expanded states after refresh
+      setExpandedResume(null);
+      setShowShareInput(null);
+      setShareEmail('');
+      setSelectedResume(null);
+      
+    } catch (error) {
+      console.error('Error refreshing resume list:', error);
+      // Optionally show user-friendly error message
+    }
+  };
+
+  // Handle page refresh/reload
+  useEffect(() => {
+    const handlePageRefresh = () => {
+      // Call handleRefresh when component mounts (page refresh)
+      if (isInitialLoad) {
+        handleRefresh();
+        setIsInitialLoad(false);
+      }
+    };
+
+    handlePageRefresh();
+  }, [isInitialLoad]);
+
+  // Optional: Handle browser refresh event
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // You can add any cleanup logic here if needed
+      // This runs just before the page is refreshed/closed
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleResumeClick = (resume) => {
     if (expandedResume?.id === resume.id) {
@@ -79,6 +144,8 @@ const Dashboard = ({ logout }) => {
         handleShareClick={handleShareClick}
         handleDeleteResume={handleDeleteResume}
         handleShareResume={handleShareResume}
+        setResumeData={setResumeData}
+        onRefresh={handleRefresh}
       />
       
       {showCreateForm && (

@@ -1,6 +1,7 @@
 // handlers/socketHandlers.js
 import io from 'socket.io-client';
 import { showSuccess, showError, showWarning, showInfo } from '../utils/toast.jsx';
+
 export const createSocketHandlers = (
   id,
   setSocket,
@@ -12,16 +13,30 @@ export const createSocketHandlers = (
   setSelectedTemplate,
   isUpdatingFromSocketRef
 ) => {
+  // Keep track of the current socket instance
+  let currentSocket = null;
+
   const initializeSocket = () => {
     if (!id) return;
 
     const token = localStorage.getItem('token');
     if (!token) return;
 
+    // **CRITICAL FIX**: Disconnect existing socket before creating new one
+    if (currentSocket) {
+      // console.log('Disconnecting existing socket before creating new one');
+      currentSocket.disconnect();
+      currentSocket = null;
+    }
+
+    // console.log('Creating new socket connection');
     const newSocket = io('https://resumebuilder-backend-dv7t.onrender.com', {
       auth: { token },
       query: { resumeId: id }
     });
+
+    // Store reference to current socket
+    currentSocket = newSocket;
 
     newSocket.on('connect', () => {
       // console.log('Connected to Socket.IO server');
@@ -70,14 +85,14 @@ export const createSocketHandlers = (
 
     newSocket.on('user-joined', (data) => {
       // console.log('User joined:', data.userEmail);
-      showNotification(`User left: ${data.userEmail}`,info);
-      setConnectedUsers(prev => [...prev, data.userEmail]);
+      showNotification(`${data.userEmail} joined the resume`, 'info');
+      // Don't add to connected users here - wait for 'users-in-room' event
     });
 
     newSocket.on('user-left', (data) => {
       // console.log('User left:', data.userEmail);
-      showNotification(`User left: ${data.userEmail}`,info);
-      setConnectedUsers(prev => prev.filter(email => email !== data.userEmail));
+      showNotification(`${data.userEmail} left the resume`, 'info');
+      // Don't remove from connected users here - wait for 'users-in-room' event
     });
 
     newSocket.on('users-in-room', (users) => {
@@ -90,29 +105,53 @@ export const createSocketHandlers = (
       setIsConnected(false);
     });
 
+    newSocket.on('error', (error) => {
+      console.error('Socket error:', error);
+      showNotification(error.message || 'Socket error occurred', 'error');
+    });
+
     setSocket(newSocket);
 
+    // Return cleanup function
     return () => {
-      newSocket.disconnect();
+      if (currentSocket) {
+        // console.log('Cleaning up socket connection');
+        currentSocket.disconnect();
+        currentSocket = null;
+      }
     };
   };
 
-    // Utility function to show notifications (replace with your preferred notification system)
-    const showNotification = (message, type) => {
-      if(type === 'error'){
-        showError(message);
-      } else if(type === 'success'){
-        showSuccess(message);
-      } else if(type === 'warning'){
-        showWarning(message);
-      } else if(type === 'info'){
-        showInfo(message);
-      } else {
-        alert(message); // Fallback only
-      }
-    };
+  // Function to manually disconnect socket
+  const disconnectSocket = () => {
+    if (currentSocket) {
+      // console.log('Manually disconnecting socket');
+      currentSocket.emit('leave-resume', id);
+      currentSocket.disconnect();
+      currentSocket = null;
+      setSocket(null);
+      setIsConnected(false);
+      setConnectedUsers([]);
+    }
+  };
+
+  // Utility function to show notifications
+  const showNotification = (message, type) => {
+    if (type === 'error') {
+      showError(message);
+    } else if (type === 'success') {
+      showSuccess(message);
+    } else if (type === 'warning') {
+      showWarning(message);
+    } else if (type === 'info') {
+      showInfo(message);
+    } else {
+      alert(message); // Fallback only
+    }
+  };
 
   return {
-    initializeSocket
+    initializeSocket,
+    disconnectSocket
   };
 };

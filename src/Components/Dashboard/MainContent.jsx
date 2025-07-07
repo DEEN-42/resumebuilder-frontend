@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, RefreshCw } from 'lucide-react';
 import ResumeDetails from './ResumeDetails';
 import ResumeGrid from './ResumeGrid';
 
@@ -17,8 +17,23 @@ const MainContent = ({
   handleOpenResume,
   handleShareClick,
   handleDeleteResume,
-  handleShareResume
+  handleShareResume,
+  setResumeData,
+  onRefresh
 }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await onRefresh();
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   return (
     <div className="main-content">
       {/* Header */}
@@ -32,15 +47,28 @@ const MainContent = ({
               {activeSection === 'owned' ? 'Create and manage your resumes' : 'Resumes shared with you'}
             </p>
           </div>
-          {activeSection === 'owned' && (
+          <div className="header-buttons">
+            
+            {activeSection === 'owned' && (
+              <button
+                onClick={() => setShowCreateForm(true)}
+                className="create-button"
+              >
+                <Plus className="create-icon" />
+                <span className="create-text">Create Resume</span>
+              </button>
+            )}
             <button
-              onClick={() => setShowCreateForm(true)}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
               className="create-button"
             >
-              <Plus className="create-icon" />
-              <span className="create-text">Create Resume</span>
+              <RefreshCw className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} />
+              <span className="refresh-text">
+                {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              </span>
             </button>
-          )}
+          </div>
         </div>
       </div>
 
