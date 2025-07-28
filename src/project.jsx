@@ -131,7 +131,7 @@ const ResumeBuilder = () => {
     // **CRITICAL FIX**: Pass the socket initialization function
     () => {
       if (!socketInitializedRef.current && id) {
-        console.log('Initializing socket from data loader');
+        // console.log('Initializing socket from data loader');
         socketInitializedRef.current = true;
         socketCleanupRef.current = socketHandlers.initializeSocket();
       }
@@ -151,7 +151,7 @@ const ResumeBuilder = () => {
   // **CRITICAL FIX**: Proper socket cleanup effect
   useEffect(() => {
     return () => {
-      console.log('Component unmounting - cleaning up socket');
+      // console.log('Component unmounting - cleaning up socket');
       if (socketCleanupRef.current) {
         socketCleanupRef.current();
       }
@@ -165,7 +165,7 @@ const ResumeBuilder = () => {
   // **CRITICAL FIX**: Load resume data and initialize socket only once
   useEffect(() => {
     if (id && !socketInitializedRef.current) {
-      console.log('Loading resume data and initializing socket for ID:', id);
+      // console.log('Loading resume data and initializing socket for ID:', id);
       dataLoader.loadResumeData();
     }
   }, [id]); // Only depend on id
@@ -174,7 +174,7 @@ const ResumeBuilder = () => {
   useEffect(() => {
     // If ID changes, cleanup current socket and reinitialize
     if (id && socketInitializedRef.current) {
-      console.log('Resume ID changed, reinitializing socket');
+      // console.log('Resume ID changed, reinitializing socket');
       
       // Cleanup current socket
       if (socketCleanupRef.current) {

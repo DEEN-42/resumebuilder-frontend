@@ -44,7 +44,7 @@ export const createDataLoader = (
   
         const data = await response.json();
         const { resume } = data;
-        console.log('Loaded resume:', resume);
+        // console.log('Loaded resume:', resume);
         if (resume) {
           // Set resumeData
           if (resume.resumeData && Object.keys(resume.resumeData).length > 0) {
