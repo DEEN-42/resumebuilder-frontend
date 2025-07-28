@@ -1,6 +1,7 @@
 import React from 'react';
 import { Type, Palette, Bold, Italic, Underline, Upload, Image, Building } from 'lucide-react';
 import './PersonalInfoForm.css';
+import { BACKEND_URL } from '../../../constants/apiConfig.js';
 
 const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
   const handleProfilePictureUpload = async (e) => {
@@ -14,7 +15,7 @@ const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
       const formData = new FormData();
       formData.append('image', file);
   
-      const res = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/update/${resumeId}/upload`, {
+      const res = await fetch(`${BACKEND_URL}/resumes/update/${resumeId}/upload`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}` // remove if not using auth
@@ -46,7 +47,7 @@ const PersonalInfoForm = ({ id, data, onChange, styles, onStyleChange }) => {
       const formData = new FormData();
       formData.append('image', file); // Field name must be "image" (matches multer config)
   
-      const res = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/update/${resumeId}/upload`, {
+      const res = await fetch(`${BACKEND_URL}/resumes/update/${resumeId}/upload`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}` // Remove this line if no auth

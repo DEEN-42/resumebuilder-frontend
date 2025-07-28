@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Lock, UserCheck } from 'lucide-react';
+import { BACKEND_URL } from '../../constants/apiConfig';
 import './AuthPages.css';
 
 const Register = () => {
@@ -147,7 +148,7 @@ const Register = () => {
     setError('');
 
     try {
-      const result = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/google-login', {
+      const result = await fetch(`${BACKEND_URL}/users/google-login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +206,7 @@ const Register = () => {
         return;
       }
       
-      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/register', {
+      const response = await fetch(`${BACKEND_URL}/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import './AuthPages.css';
+import { BACKEND_URL } from '../../constants/apiConfig';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -202,7 +203,7 @@ const Login = () => {
         setLoading(false);
         return;
       }
-      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/login', {
+      const response = await fetch(`${BACKEND_URL}/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password : formData.password }),

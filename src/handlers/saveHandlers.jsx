@@ -1,3 +1,5 @@
+import { BACKEND_URL } from '../constants/apiConfig';
+
 // handlers/saveHandlers.js
 export const createSaveHandlers = (
     id,
@@ -41,7 +43,7 @@ export const createSaveHandlers = (
         // Use socket endpoint for real-time updates
         const endpoint = `/resumes/update/${id}`;
         // console.log(currentData);
-        const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com${endpoint}`, {
+        const response = await fetch(`${BACKEND_URL}${endpoint}`, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,

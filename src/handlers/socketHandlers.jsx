@@ -1,7 +1,7 @@
 // handlers/socketHandlers.js
 import io from 'socket.io-client';
 import { showSuccess, showError, showWarning, showInfo } from '../utils/toast.jsx';
-
+import { BACKEND_URL } from '../constants/apiConfig.js';
 export const createSocketHandlers = (
   id,
   setSocket,
@@ -30,7 +30,7 @@ export const createSocketHandlers = (
     }
 
     // console.log('Creating new socket connection');
-    const newSocket = io('https://resumebuilder-backend-dv7t.onrender.com', {
+    const newSocket = io(BACKEND_URL, {
       auth: { token },
       query: { resumeId: id }
     });

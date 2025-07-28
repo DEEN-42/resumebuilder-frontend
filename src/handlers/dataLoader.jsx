@@ -1,3 +1,5 @@
+import { BACKEND_URL } from '../constants/apiConfig';
+
 // handlers/dataLoader.js
 export const createDataLoader = (
     id,
@@ -28,7 +30,7 @@ export const createDataLoader = (
         // Use socket endpoint if available
         const endpoint = `/resumes/load/${id}`;
         
-        const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com${endpoint}`, {
+        const response = await fetch(`${BACKEND_URL}${endpoint}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -42,7 +44,7 @@ export const createDataLoader = (
   
         const data = await response.json();
         const { resume } = data;
-  
+        console.log('Loaded resume:', resume);
         if (resume) {
           // Set resumeData
           if (resume.resumeData && Object.keys(resume.resumeData).length > 0) {
@@ -55,7 +57,8 @@ export const createDataLoader = (
                     newResumeData.personalInfo = {
                       ...prevData.personalInfo,
                       ...resume.resumeData.personalInfo,
-                      institutelogo: templates[resume.selectedTemplate || 'iitkg']?.logo || prevData.personalInfo.institutelogo
+
+                      institutelogo: resume.resumeData.personalInfo.institutelogo|| prevData.personalInfo.institutelogo || templates[resume.selectedTemplate || 'iitkg']?.logo 
                     };
                   } else if (Array.isArray(resume.resumeData[key])) {
                     newResumeData[key] = resume.resumeData[key];

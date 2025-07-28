@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { BACKEND_URL } from '../constants/apiConfig';
 
 export const useResumeActions = (
   setResumeData,
@@ -11,7 +12,7 @@ export const useResumeActions = (
     if (formData.title && formData.description && formData.template) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/resumes/create', {
+        const response = await fetch(`${BACKEND_URL}/resumes/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ export const useResumeActions = (
   const handleDeleteResume = useCallback(async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/delete/${id}`, {
+      const response = await fetch(`${BACKEND_URL}/resumes/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ export const useResumeActions = (
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/resumes/share/${id}`, {
+      const response = await fetch(`${BACKEND_URL}/resumes/share/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

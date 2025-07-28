@@ -7,6 +7,7 @@ import Project from './project.jsx';
 import Register from './Components/AuthPages/Register.jsx';
 import Login from './Components/AuthPages/Login.jsx';
 import Dashboard from './Components/Dashboard/dashboard.jsx';
+import { BACKEND_URL } from './constants/apiConfig.js';
 
 // Logout function
 const logout = () => {
@@ -55,7 +56,7 @@ const scheduleTokenRenewal = (token) => {
     setTimeout(async () => {
       try {
         const currentToken = localStorage.getItem('token');
-        const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/renew-token', {
+        const response = await fetch(`${BACKEND_URL}/users/renew-token`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, AlertCircle, CheckCircle, XCircle, Lightbulb, RefreshCw } from 'lucide-react';
 import './ATSScorer.css';
+import { BACKEND_URL } from '../../../constants/apiConfig';
 
 const ATSScorer = ({ resumeData, resumeId }) => {
   const [score, setScore] = useState(0);
@@ -27,7 +28,7 @@ const ATSScorer = ({ resumeData, resumeId }) => {
         throw new Error('Authentication token not found');
       }
 
-      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/ai/atsScore', {
+      const response = await fetch(`${BACKEND_URL}/ai/atsScore`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

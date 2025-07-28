@@ -5,6 +5,7 @@ import MainContent from './MainContent';
 import CreateResumeModal from './CreateResumeModal';
 import { useResumeDataforDashboard } from '../../hooks/useResumeData';
 import { useResumeActions } from '../../hooks/useResumeActions';
+import { BACKEND_URL } from '../../constants/apiConfig';
 import './dashboard.css';
 
 const Dashboard = ({ logout }) => {
@@ -34,7 +35,7 @@ const Dashboard = ({ logout }) => {
         return;
       }
 
-      const response = await fetch('https://resumebuilder-backend-dv7t.onrender.com/users/getResumeList', {
+      const response = await fetch(`${BACKEND_URL}/users/getResumeList`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

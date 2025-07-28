@@ -3,7 +3,7 @@ import { Share2, Mail, X, Users, Plus, Trash2, UserPlus, RefreshCw } from 'lucid
 import './SharingSection.css';
 import { useNavigate } from 'react-router-dom';
 import { showSuccess, showError, showWarning, showInfo } from '../../../utils/toast.jsx';
-
+import { BACKEND_URL } from '../../../constants/apiConfig';
 const SharingSection = ({id, connectedUsers}) => {
   const [emailInput, setEmailInput] = useState('');
   const [sharedUsers, setSharedUsers] = useState([]);
@@ -13,7 +13,7 @@ const SharingSection = ({id, connectedUsers}) => {
   const navigate = useNavigate();
   
   // API base URL
-  const API_BASE_URL = 'https://resumebuilder-backend-dv7t.onrender.com';
+  const API_BASE_URL = BACKEND_URL;
 
   // Function to check if a user is online
   const isUserOnline = (email) => {

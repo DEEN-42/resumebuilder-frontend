@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AISuggestions.css';
-
+import { BACKEND_URL } from '../../../constants/apiConfig';
 const AISuggestions = ({ resumeId, resumeData, dataHandlers }) => {
   const [selectedSection, setSelectedSection] = useState('');
   const [selectedItemId, setSelectedItemId] = useState('');
@@ -78,7 +78,7 @@ const AISuggestions = ({ resumeId, resumeData, dataHandlers }) => {
       };
       // console.log(requestBody);
 
-      const response = await fetch(`https://resumebuilder-backend-dv7t.onrender.com/ai/${selectedSection}`, {
+      const response = await fetch(`${BACKEND_URL}/ai/${selectedSection}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
