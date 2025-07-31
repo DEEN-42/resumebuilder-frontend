@@ -80,7 +80,7 @@ export const createSocketHandlers = (
       // Reset flag after a short delay
       setTimeout(() => {
         isUpdatingFromSocketRef.current = false;
-      }, 100);
+      }, 1000); // 1 second delay to ensure state updates are applied
     });
 
     newSocket.on('user-joined', (data) => {
