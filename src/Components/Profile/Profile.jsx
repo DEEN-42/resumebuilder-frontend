@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Lock, Edit3, Save, X, Camera, Loader } from 'lucide-react';
+import { User, Lock, Edit3, Save, X, Camera, Loader, Home } from 'lucide-react';
 import './Profile.css';
 import { BACKEND_URL } from '../../constants/apiConfig';
 import {showSuccess, showError, showWarning, showInfo} from '../../utils/toast.jsx';
@@ -37,10 +37,8 @@ const Profile = () => {
                 }
                 const data = await response.json();
                 setUserData(data);
-                // console.log('User profile fetched successfully:', data);
                 // Initialize editedData with fetched data
                 setEditedData(data);
-                // console.log('Edited data initialized:', data);
             } catch (err) {
                 setError(err.message);
                 // Set dummy data on error for demonstration
@@ -61,6 +59,17 @@ const Profile = () => {
             setEditedData({ ...userData });
         }
         setIsEditing(!isEditing);
+    };
+    
+    // Function to handle navigation to the dashboard
+    const handleGoHome = () => {
+        // This is a simple navigation method. If you are using React Router,
+        // you would likely use the `useNavigate` hook for client-side routing.
+        // Example: 
+        // import { useNavigate } from 'react-router-dom';
+        // const navigate = useNavigate();
+        // navigate('/dashboard');
+        window.location.href = '/dashboard';
     };
 
     const handleInputChange = (field, value) => {
@@ -93,10 +102,11 @@ const Profile = () => {
             setUserData(updatedUser.user);
             setEditedData(updatedUser);
             setIsEditing(false);
-            console.log('Profile updated successfully:', updatedUser);
+            showSuccess('Profile updated successfully!');
 
         } catch (err) {
             setError(err.message);
+            showError(err.message);
             // Optionally, revert changes on failure
             setEditedData({ ...userData });
         } finally {
@@ -104,34 +114,45 @@ const Profile = () => {
         }
     };
 
-const handleProfilePicChange = async (event) => {
-    const file = event.target.files[0];
-    const token = localStorage.getItem('token');
-    if (!file) return;
+    const handleProfilePicChange = async (event) => {
+        const file = event.target.files[0];
+        const token = localStorage.getItem('token');
+        if (!file) return;
 
-    try {
-        const formData = new FormData();
-        formData.append('image', file);
+        // Show a temporary loading state on the image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setEditedData(prev => ({ ...prev, profilePic: e.target.result }));
+        };
+        reader.readAsDataURL(file);
 
-        const response = await fetch(`${BACKEND_URL}/users/profile/picture`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-        });
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
 
-        if (!response.ok) {
-            throw new Error('Failed to upload');
+            const response = await fetch(`${BACKEND_URL}/users/profile/picture`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload profile picture.');
+            }
+
+            const data = await response.json();
+            // API returns { url: "uploaded_image_url" }
+            handleInputChange('profilePic', data.url);
+            showSuccess('Profile picture updated!');
+        } catch (error) {
+            console.error('Error uploading profile picture:', error);
+            showError(error.message);
+            // Revert to original picture on error
+            setEditedData(prev => ({ ...prev, profilePic: userData.profilePic }));
         }
-
-        const data = await response.json();
-        // Assume API returns { url: "uploaded_image_url" }
-        handleInputChange('profilePic', data.url);
-    } catch (error) {
-        console.error('Error uploading profile picture:', error);
-    }
-};
+    };
 
     const handleUpdatePassword = async () => {
         if (!oldPassword || !newPassword) {
@@ -143,8 +164,8 @@ const handleProfilePicChange = async (event) => {
             return;
         }
         if( oldPassword === newPassword) {
-          showError("New password cannot be the same as old password.");
-          return;
+            showError("New password cannot be the same as old password.");
+            return;
         }
         
         setIsUpdating(true);
@@ -221,6 +242,10 @@ const handleProfilePicChange = async (event) => {
                     </div>
 
                     <div className="profile-actions">
+                         <button className="home-btn" onClick={handleGoHome} disabled={isUpdating}>
+                            <Home size={18} />
+                            Home
+                        </button>
                         {!isEditing ? (
                             <button className="edit-btn" onClick={handleEditToggle}>
                                 <Edit3 size={18} />
