@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://localhost:3030";
+export const BACKEND_URL = "https://resumebuilder-backend-dv7t.onrender.com";
