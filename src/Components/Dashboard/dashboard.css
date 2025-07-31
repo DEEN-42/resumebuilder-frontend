@@ -151,6 +151,32 @@ body {
 .logout-section {
     padding: 1.5rem;
 }
+.profile-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: #c4b5fd;
+    background: transparent;
+    border: none;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.profile-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+.profile-text {
+    font-weight: 500;
+}
 
 .logout-button {
     width: 100%;

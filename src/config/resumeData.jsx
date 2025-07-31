@@ -23,6 +23,16 @@ export const getInitialResumeData = () => ({
   coursework: [],
   competitions: [],
   position: [],
-  publications: [],
-  extracurricular: [],
+  sectionorder: initialSections,
 });
+
+export const initialSections = [
+  { id: 'education', title: 'Education' },
+  { id: 'internships', title: 'Internships' },
+  { id: 'projects', title: 'Projects' },
+  { id: 'skills', title: 'Skills & Expertise' },
+  { id: 'position', title: 'Positions of Responsibility' },
+  { id: 'awards', title: 'Awards & Achievements' },
+  { id: 'extraAcademicActivities', title: 'Extra Academic Activities' },
+  { id: 'coursework', title: 'Coursework' },
+];

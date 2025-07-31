@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { LogOut, User, Building } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 const Sidebar = ({ activeSection, setActiveSection, getResumeCount, logout }) => {
   const [userInfo, setUserInfo] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Get user info from localStorage
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -16,6 +16,10 @@ const Sidebar = ({ activeSection, setActiveSection, getResumeCount, logout }) =>
       }
     }
   }, []);
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
 
   return (
     <div className="sidebar">
@@ -94,6 +98,10 @@ const Sidebar = ({ activeSection, setActiveSection, getResumeCount, logout }) =>
 
       {/* Logout Button */}
       <div className="logout-section">
+        <button onClick={handleProfileClick} className="profile-button">
+          <User className="profile-icon" />
+          <span className="profile-text">Profile</span>
+        </button>
         <button onClick={logout} className="logout-button">
           <LogOut className="logout-icon" />
           <span className="logout-text">Logout</span>

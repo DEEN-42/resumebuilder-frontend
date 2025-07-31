@@ -3,7 +3,7 @@ import { usePageBreak, PageBreakWrapper } from '../../Components/FormSections/Re
 import './ISI_Template.css';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 
-const ISITemplate = ({ data, styles = {} }) => {
+const ISITemplate = ({ data, styles = {}, sectionOrder = [] }) => {
   // Default global styles if not provided
   const defaultGlobalStyles = {
     heading: {
@@ -44,17 +44,17 @@ const ISITemplate = ({ data, styles = {} }) => {
   };
 
   const renderContent = () => {
-    const allElements = [];
+    const topElements = [];
 
-    // Header with Logo, Name, and Profile - only if data exists
+    // Header with Logo, Name, and Profile - always at the top if data exists
     if (data.personalInfo && (data.personalInfo.name || data.personalInfo.program || data.personalInfo.institute || data.personalInfo.contact || data.personalInfo.email)) {
-      allElements.push(
+      topElements.push(
         <div key="header" className="isi-header">
-          {(data.personalInfo.institutelogo ) && (
+          {(data.personalInfo.institutelogo) && (
             <div className="isi-logo">
-              <img 
-                src={data.personalInfo.institutelogo }
-                alt="Institute Logo" 
+              <img
+                src={data.personalInfo.institutelogo}
+                alt="Institute Logo"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -125,9 +125,9 @@ const ISITemplate = ({ data, styles = {} }) => {
       );
     }
 
-    // Education Table - only if data exists
-    if (data.education && data.education.length > 0) {
-      allElements.push(
+    // 1. Define rendering logic for each section in a map.
+    const sectionRenderers = {
+      education: () => (data.education && data.education.length > 0) ? [
         <div key="education-section" className="isi-section">
           <table className="isi-education-table">
             <thead>
@@ -150,17 +150,12 @@ const ISITemplate = ({ data, styles = {} }) => {
             </tbody>
           </table>
         </div>
-      );
-    }
-
-    // Scholastic Achievements - only if data exists
-    if (data.awards && data.awards.length > 0) {
-      allElements.push(
+      ] : [],
+      
+      awards: () => (data.awards && data.awards.length > 0) ? [
         <div key="scholastic-section" className="isi-gray-section" style={getTextStyle('heading')}>
           SCHOLASTIC ACHIEVEMENTS
-        </div>
-      );
-      allElements.push(
+        </div>,
         <ul key="scholastic-list" className="isi-bullet-list">
           {data.awards.map((award, idx) => (
             <li key={idx} style={getTextStyle('description')}>
@@ -169,19 +164,13 @@ const ISITemplate = ({ data, styles = {} }) => {
             </li>
           ))}
         </ul>
-      );
-    }
+      ] : [],
 
-    // Work Experience - only if data exists
-    if (data.internships && data.internships.length > 0) {
-      allElements.push(
+      internships: () => (data.internships && data.internships.length > 0) ? [
         <div key="work-section" className="isi-gray-section" style={getTextStyle('heading')}>
           WORK EXPERIENCE
-        </div>
-      );
-      
-      data.internships.forEach((internship, idx) => {
-        allElements.push(
+        </div>,
+        ...data.internships.map((internship, idx) => (
           <div key={`work-${idx}`} className="isi-work-item">
             <div className="isi-work-header">
               <span style={getTextStyle('heading')}>
@@ -199,40 +188,28 @@ const ISITemplate = ({ data, styles = {} }) => {
               </ul>
             )}
           </div>
-        );
-      });
-    }
-
-    // Skills & Interests - only if data exists
-    if (data.skills && data.skills.length > 0) {
-      allElements.push(
+        ))
+      ] : [],
+      
+      skills: () => (data.skills && data.skills.length > 0) ? [
         <div key="skills-section" className="isi-gray-section" style={getTextStyle('heading')}>
           SKILLS & INTERESTS
-        </div>
-      );
-      
-      data.skills.forEach((skill, idx) => {
-        allElements.push(
+        </div>,
+        ...data.skills.map((skill, idx) => (
           <div key={`skill-${idx}`} className="isi-skill-item">
             <span style={getTextStyle('heading')}>{skill.title}: </span>
             <span style={getTextStyle('description')}>
               {skill.description ? skill.description.split('\n').join(', ') : ''}
             </span>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Projects - only if data exists
-    if (data.projects && data.projects.length > 0) {
-      allElements.push(
+      projects: () => (data.projects && data.projects.length > 0) ? [
         <div key="projects-section" className="isi-gray-section" style={getTextStyle('heading')}>
           PROJECTS
-        </div>
-      );
-      
-      data.projects.forEach((project, idx) => {
-        allElements.push(
+        </div>,
+        ...data.projects.map((project, idx) => (
           <div key={`project-${idx}`} className="isi-project-item">
             <div className="isi-work-header">
             <span style={getTextStyle('heading')}>
@@ -244,7 +221,7 @@ const ISITemplate = ({ data, styles = {} }) => {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: 'inherit', textDecoration: 'none' }} // Optional styling
+                    style={{ color: 'inherit', textDecoration: 'none' }}
                   >
                     GitHub Repository
                   </a>
@@ -263,19 +240,14 @@ const ISITemplate = ({ data, styles = {} }) => {
               </ul>
             )}
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Relevant Courses - only if data exists
-    if (data.coursework && data.coursework.length > 0) {
-      allElements.push(
+      coursework: () => (data.coursework && data.coursework.length > 0) ? [
         <div key="courses-section" className="isi-gray-section" style={getTextStyle('heading')}>
           RELEVANT COURSES
-        </div>
-      );
-      data.coursework.forEach((course, idx) => {
-        allElements.push(
+        </div>,
+        ...data.coursework.map((course, idx) => (
           <div key={`course-${idx}`} className="isi-course-item">
             <span style={getTextStyle('heading')}>{course.title}: </span>
             <span style={getTextStyle('description')}>
@@ -287,19 +259,14 @@ const ISITemplate = ({ data, styles = {} }) => {
               </span>
             )}
           </div>
-        );
-      });
-    }
-
-    // Positions of Responsibility - only if data exists
-    if (data.position && data.position.length > 0) {
-      allElements.push(
+        ))
+      ] : [],
+      
+      position: () => (data.position && data.position.length > 0) ? [
         <div key="position-section" className="isi-gray-section" style={getTextStyle('heading')}>
           POSITIONS OF RESPONSIBILITY
-        </div>
-      );
-      data.position.forEach((pos, idx) => {
-        allElements.push(
+        </div>,
+        ...data.position.map((pos, idx) => (
           <div key={`position-${idx}`} className="isi-position-item">
             <div className="isi-work-header">
               <span style={getTextStyle('heading')}>{pos.title}</span>
@@ -315,18 +282,13 @@ const ISITemplate = ({ data, styles = {} }) => {
               </ul>
             )}
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Extracurricular Activities - only if data exists
-    if (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) {
-      allElements.push(
+      extraAcademicActivities: () => (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) ? [
         <div key="extra-section" className="isi-gray-section" style={getTextStyle('heading')}>
           EXTRACURRICULAR ACTIVITIES
-        </div>
-      );
-      allElements.push(
+        </div>,
         <ul key="extra-list" className="isi-bullet-list">
           {data.extraAcademicActivities.map((activity, idx) => (
             <li key={idx} style={getTextStyle('description')}>
@@ -334,10 +296,29 @@ const ISITemplate = ({ data, styles = {} }) => {
             </li>
           ))}
         </ul>
-      );
-    }
+      ] : [],
+    };
 
-    return allElements;
+    // 2. Define the default order of sections.
+    const defaultOrder = [
+      'education', 'awards', 'internships', 'skills', 'projects', 
+      'coursework', 'position', 'extraAcademicActivities'
+    ];
+    
+    // Use the user-provided order, or the default one.
+    const finalOrder = sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+
+    // 3. Build the elements array by iterating through the specified order.
+    const orderedElements = [];
+    finalOrder.forEach(sectionKey => {
+      if (sectionRenderers[sectionKey]) {
+        const elements = sectionRenderers[sectionKey]();
+        orderedElements.push(...elements);
+      }
+    });
+
+    // Combine the static top elements with the dynamically ordered sections.
+    return [...topElements, ...orderedElements];
   };
 
   const allElements = renderContent();

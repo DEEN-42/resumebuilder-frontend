@@ -8,6 +8,7 @@ import Register from './Components/AuthPages/Register.jsx';
 import Login from './Components/AuthPages/Login.jsx';
 import Dashboard from './Components/Dashboard/dashboard.jsx';
 import { BACKEND_URL } from './constants/apiConfig.js';
+import Profile from './Components/Profile/Profile.jsx';
 
 // Logout function
 const logout = () => {
@@ -113,7 +114,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile/>
+            </ProtectedRoute>
+          }
+        />
         {/* Protected project route */}
         <Route
           path="/project/:id"

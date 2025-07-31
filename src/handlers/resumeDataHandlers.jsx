@@ -153,6 +153,13 @@ export const createResumeDataHandlers = (setResumeData) => {
         }));
       }
     };
+
+    const handleSectionOrderChange = (newSectionOrder) => {
+    setResumeData(prev => ({
+      ...prev,
+      sectionorder: newSectionOrder
+    }));
+  };
   
     const handlePositionsOfResponsibilityChange = (index, field, value) => {
       if (index === 'add') {
@@ -184,6 +191,7 @@ export const createResumeDataHandlers = (setResumeData) => {
       handleAwardsChange,
       handleExtraAcademicActivitiesChange,
       handleCourseworkChange,
-      handlePositionsOfResponsibilityChange
+      handlePositionsOfResponsibilityChange,
+      handleSectionOrderChange
     };
   };

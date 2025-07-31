@@ -2,7 +2,8 @@ import React from 'react';
 import { usePageBreak, PageBreakWrapper } from '../../Components/FormSections/ResumeLayout/ResumeLayout';
 import './IITKGPTemplate.css';
 
-const IITKGPTemplate = ({ data, styles = {} }) => {
+// Add the new 'sectionOrder' prop with a default empty array
+const IITKGPTemplate = ({ data, styles = {}, sectionOrder = [] }) => {
   // Default global styles if not provided
   const defaultGlobalStyles = {
     heading: {
@@ -43,13 +44,14 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
   };
 
   const renderContent = () => {
-    const allElements = [
+    // The header and contact info will always be at the top
+    const topElements = [
       // Header with Logo and Profile
       <div key="header" className="iitkgp-header">
         <div className="iitkgp-logo">
-          <img 
+          <img
             src={data.personalInfo.institutelogo}
-            alt="Profile" 
+            alt="Institute Logo"
             style={{
               width: '100%',
               height: '100%',
@@ -73,15 +75,14 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
         
         <div className="iitkgp-profile">
           {data.personalInfo.profilePicture ? (
-            <img 
-              src={data.personalInfo.profilePicture} 
-              alt="Profile" 
+            <img
+              src={data.personalInfo.profilePicture}
+              alt="Profile"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
                 borderRadius: '50%',
-
               }}
             />
           ) : (
@@ -116,13 +117,14 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
         )}
       </div>
     ];
+    
+    // START: MODIFICATION FOR DYNAMIC ORDERING
 
-    // Education
-    if (data.education.length > 0) {
-      allElements.push(
-        <div key="education-section" className="iitkgp-section" style={getTextStyle('heading')}>EDUCATION</div>
-      );
-      allElements.push(
+    // 1. Define rendering logic for each section in a map.
+    // This centralizes the JSX for each section.
+    const sectionRenderers = {
+      education: () => (data.education && data.education.length > 0) ? [
+        <div key="education-section" className="iitkgp-section" style={getTextStyle('heading')}>EDUCATION</div>,
         <table key="education-table" className="iitkgp-education-table">
           <thead>
             <tr style={getTextStyle('heading')}>
@@ -143,118 +145,80 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
             ))}
           </tbody>
         </table>
-      );
-    }
+      ] : [],
 
-    // Publications
-    if (data.publications && data.publications.length > 0) {
-      allElements.push(
-        <div key="publications-section" className="iitkgp-section" style={getTextStyle('heading')}>PUBLICATIONS</div>
-      );
-      data.publications.forEach((pub, idx) => {
-        allElements.push(
+      publications: () => (data.publications && data.publications.length > 0) ? [
+        <div key="publications-section" className="iitkgp-section" style={getTextStyle('heading')}>PUBLICATIONS</div>,
+        ...data.publications.map((pub, idx) => (
           <div key={`publication-${idx}`} className="iitkgp-item">
             <div className="iitkgp-item-header">
               <span style={getTextStyle('heading')}>{pub.title} | {pub.conference} | {pub.location}</span>
               <span style={getTextStyle('heading')}>{pub.date}</span>
             </div>
             <ul className="iitkgp-bullet-list">
-              {pub.points.map((point, pIdx) => (
-                <li key={pIdx} style={getTextStyle('description')}>{point}</li>
-              ))}
+              {pub.points.map((point, pIdx) => <li key={pIdx} style={getTextStyle('description')}>{point}</li>)}
             </ul>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Internships
-    if (data.internships.length > 0) {
-      allElements.push(
-        <div key="internships-section" className="iitkgp-section" style={getTextStyle('heading')}>INTERNSHIPS</div>
-      );
-      data.internships.forEach((internship, idx) => {
-        allElements.push(
+      internships: () => (data.internships && data.internships.length > 0) ? [
+        <div key="internships-section" className="iitkgp-section" style={getTextStyle('heading')}>INTERNSHIPS</div>,
+        ...data.internships.map((internship, idx) => (
           <div key={`internship-${idx}`} className="iitkgp-item">
             <div className="iitkgp-item-header">
               <span style={getTextStyle('heading')}>{internship.title} | {internship.company} | {internship.location}</span>
               <span style={getTextStyle('heading')}>{internship.duration}</span>
             </div>
             <ul className="iitkgp-bullet-list">
-              {internship.description.split('\n').map((point, pIdx) => (
-                <li key={pIdx} style={getTextStyle('description')}>{point}</li>
-              ))}
+              {internship.description.split('\n').map((point, pIdx) => <li key={pIdx} style={getTextStyle('description')}>{point}</li>)}
             </ul>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Projects
-    if (data.projects.length > 0) {
-      allElements.push(
-        <div key="projects-section" className="iitkgp-section" style={getTextStyle('heading')}>PROJECTS</div>
-      );
-      data.projects.forEach((project, idx) => {
-        allElements.push(
+      projects: () => (data.projects && data.projects.length > 0) ? [
+        <div key="projects-section" className="iitkgp-section" style={getTextStyle('heading')}>PROJECTS</div>,
+        ...data.projects.map((project, idx) => (
           <div key={`project-${idx}`} className="iitkgp-item">
             <div className="iitkgp-item-header">
-            <span style={getTextStyle('heading')}>
-              {project.title}
-              {project.url && (
-                <>
-                  {" | "}
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: 'inherit', textDecoration: 'none' }} // Optional styling
-                  >
-                    GitHub Repository
-                  </a>
-                </>
-              )}
-            </span>
+              <span style={getTextStyle('heading')}>
+                {project.title}
+                {project.url && (
+                  <>
+                    {" | "}
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                      GitHub Repository
+                    </a>
+                  </>
+                )}
+              </span>
               <span style={getTextStyle('heading')}>{project.duration}</span>
             </div>
             <ul className="iitkgp-bullet-list">
-              {project.description.split('\n').map((point, pIdx) => (
-                <li key={pIdx} style={getTextStyle('description')}>{point}</li>
-              ))}
+              {project.description.split('\n').map((point, pIdx) => <li key={pIdx} style={getTextStyle('description')}>{point}</li>)}
             </ul>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Competitions
-    if (data.competitions && data.competitions.length > 0) {
-      allElements.push(
-        <div key="competitions-section" className="iitkgp-section" style={getTextStyle('heading')}>COMPETITION/CONFERENCE</div>
-      );
-      data.competitions.forEach((comp, idx) => {
-        allElements.push(
+      competitions: () => (data.competitions && data.competitions.length > 0) ? [
+        <div key="competitions-section" className="iitkgp-section" style={getTextStyle('heading')}>COMPETITION/CONFERENCE</div>,
+        ...data.competitions.map((comp, idx) => (
           <div key={`competition-${idx}`} className="iitkgp-item">
             <div className="iitkgp-item-header">
               <span style={getTextStyle('heading')}>{comp.title}</span>
               <span style={getTextStyle('heading')}>{comp.date}</span>
             </div>
             <ul className="iitkgp-bullet-list">
-              {comp.points.map((point, pIdx) => (
-                <li key={pIdx} style={getTextStyle('description')}>{point}</li>
-              ))}
+              {comp.points.map((point, pIdx) => <li key={pIdx} style={getTextStyle('description')}>{point}</li>)}
             </ul>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
 
-    // Awards
-    if (data.awards.length > 0) {
-      allElements.push(
-        <div key="awards-section" className="iitkgp-section" style={getTextStyle('heading')}>AWARDS AND ACHIEVEMENTS</div>
-      );
-      allElements.push(
+      awards: () => (data.awards && data.awards.length > 0) ? [
+        <div key="awards-section" className="iitkgp-section" style={getTextStyle('heading')}>AWARDS AND ACHIEVEMENTS</div>,
         <ul key="awards-list" className="iitkgp-bullet-list">
           {data.awards.map((award, idx) => (
             <li key={idx} style={getTextStyle('description')}>
@@ -262,21 +226,13 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
             </li>
           ))}
         </ul>
-      );
-    }
+      ] : [],
 
-    // Extra Academic Activities
-    if (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) {
-      allElements.push(
-        <div key="extra-activities-section" className="iitkgp-section" style={getTextStyle('heading')}>EXTRA ACADEMIC ACTIVITIES</div>
-      );
-      allElements.push(
+      extraAcademicActivities: () => (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) ? [
+        <div key="extra-activities-section" className="iitkgp-section" style={getTextStyle('heading')}>EXTRA ACADEMIC ACTIVITIES</div>,
         <ul key="extra-activities-list" className="iitkgp-bullet-list">
           {data.extraAcademicActivities.map((activity, idx) => {
-            const lines = activity.description
-              ? activity.description.split('\n').filter(line => line.trim() !== '')
-              : [];
-
+            const lines = activity.description ? activity.description.split('\n').filter(line => line.trim() !== '') : [];
             return (
               <li key={idx} style={getTextStyle('description')}>
                 {activity.title && <strong style={getTextStyle('heading')}>{activity.title} :</strong>}
@@ -284,30 +240,20 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
                   <span style={getTextStyle('description')}> {lines[0]}</span>
                 ) : lines.length > 1 ? (
                   <ul style={{ listStyleType: 'decimal', paddingLeft: '1.5em' }}>
-                    {lines.map((line, subIdx) => (
-                      <li key={subIdx} style={getTextStyle('description')}>{line}</li>
-                    ))}
+                    {lines.map((line, subIdx) => <li key={subIdx} style={getTextStyle('description')}>{line}</li>)}
                   </ul>
                 ) : null}
               </li>
             );
           })}
         </ul>
-      );
-    }
+      ] : [],
 
-    // Coursework Information
-    if (data.coursework.length > 0) {
-      allElements.push(
-        <div key="coursework-section" className="iitkgp-section" style={getTextStyle('heading')}>COURSEWORK INFORMATION</div>
-      );
-      allElements.push(
-        <ul key="coursework-list" className="iitkgp-bullet-list">
+      coursework: () => (data.coursework && data.coursework.length > 0) ? [
+         <div key="coursework-section" className="iitkgp-section" style={getTextStyle('heading')}>COURSEWORK INFORMATION</div>,
+         <ul key="coursework-list" className="iitkgp-bullet-list">
           {data.coursework.map((course, idx) => {
-            const formattedDescription = course.description
-              ? course.description.split('\n').join(' | ')
-              : '';
-
+            const formattedDescription = course.description ? course.description.split('\n').join(' | ') : '';
             return (
               <li key={idx} style={getTextStyle('description')}>
                 {course.title ? (
@@ -322,43 +268,26 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
             );
           })}
         </ul>
-      );
-    }
+      ] : [],
 
-    // Skills
-    if (data.skills && data.skills.length > 0) {
-      allElements.push(
-        <div key="skills-section" className="iitkgp-section" style={getTextStyle('heading')}>SKILLS AND EXPERTISE</div>
-      );
-      allElements.push(
+      skills: () => (data.skills && data.skills.length > 0) ? [
+        <div key="skills-section" className="iitkgp-section" style={getTextStyle('heading')}>SKILLS AND EXPERTISE</div>,
         <ul key="skills-list" className="iitkgp-bullet-list">
           {data.skills.map((skill, idx) => {
-            const skillList = skill.description
-              ? skill.description.split('\n').filter(line => line.trim() !== '')
-              : [];
-
+            const skillList = skill.description ? skill.description.split('\n').filter(line => line.trim() !== '') : [];
             return (
               <li key={idx} style={getTextStyle('description')}>
-                <strong style={getTextStyle('heading')}>
-                  {skill.title}:
-                </strong>{' '}
-                <span style={getTextStyle('description')}>
-                  {skillList.join(' | ')}
-                </span>
+                <strong style={getTextStyle('heading')}>{skill.title}:</strong>{' '}
+                <span style={getTextStyle('description')}>{skillList.join(' | ')}</span>
               </li>
             );
           })}
         </ul>
-      );
-    }
+      ] : [],
 
-    // Positions of Responsibility
-    if (data.position && data.position.length > 0) {
-      allElements.push(
-        <div key="position-section" className="iitkgp-section" style={getTextStyle('heading')}>POSITIONS OF RESPONSIBILITY</div>
-      );
-      data.position.forEach((pos, idx) => {
-        allElements.push(
+      position: () => (data.position && data.position.length > 0) ? [
+        <div key="position-section" className="iitkgp-section" style={getTextStyle('heading')}>POSITIONS OF RESPONSIBILITY</div>,
+        ...data.position.map((pos, idx) => (
           <div key={`position-${idx}`} className="iitkgp-item">
             <div className="iitkgp-item-header">
               <span style={getTextStyle('heading')}>{pos.title}</span>
@@ -370,10 +299,32 @@ const IITKGPTemplate = ({ data, styles = {} }) => {
               ))}
             </ul>
           </div>
-        );
-      });
-    }
+        ))
+      ] : [],
+    };
+    
+    // 2. Define the order of sections. Use the user-provided order, or a default one.
+    const defaultOrder = [
+        'education', 'publications', 'internships', 'projects', 'competitions', 
+        'awards', 'extraAcademicActivities', 'coursework', 'skills', 'position'
+    ];
 
+    const finalOrder = sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+
+    // 3. Build the elements array by iterating through the specified order.
+    const orderedElements = [];
+    finalOrder.forEach(sectionKey => {
+      if (sectionRenderers[sectionKey]) {
+        const elements = sectionRenderers[sectionKey]();
+        orderedElements.push(...elements);
+      }
+    });
+
+    // Combine the static top elements with the dynamically ordered sections
+    const allElements = [...topElements, ...orderedElements];
+    
+    // END: MODIFICATION
+    
     return allElements;
   };
 

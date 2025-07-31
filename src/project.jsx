@@ -7,7 +7,7 @@ import './project.css';
 
 // Configuration imports
 import { getInitialGlobalStyles } from './config/globalStyles.jsx';
-import { getInitialResumeData } from './config/resumeData.jsx';
+import { getInitialResumeData, initialSections} from './config/resumeData.jsx';
 import { getTemplatesConfig } from './config/templates.jsx';
 
 // Separated Components
@@ -27,6 +27,8 @@ import ExtraAcademicActivitiesForm from './Components/FormSections/ExtraCurricul
 import CourseworkForm from './Components/FormSections/CourseworkForm/CourseworkForm.jsx';
 import PositionsOfResponsibilityForm from './Components/FormSections/PositionsOfResponsibilityForm/PositionsOfResponsibilityForm.jsx';
 
+// Customizer Component
+import ResumeCustomizer from './Components/ResumeCustomizer/ResumeCustomizer.jsx';
 // Handler imports
 import { createResumeDataHandlers } from './handlers/resumeDataHandlers.jsx';
 import { createUIHandlers } from './handlers/uiHandlers.jsx';
@@ -71,6 +73,9 @@ const ResumeBuilder = () => {
   const [resumeData, setResumeData] = useState(getInitialResumeData());
   const templates = getTemplatesConfig();
 
+  // Section order and columns
+  const sections = resumeData.sectionorder || initialSections;
+  const sectionOrder = sections.map(section => section.id);
   // SidePanel
   const [activeSideTab, setActiveSideTab] = useState('share');
   
@@ -128,7 +133,6 @@ const ResumeBuilder = () => {
     templates,
     globalStyles,
     resumeData,
-    // **CRITICAL FIX**: Pass the socket initialization function
     () => {
       if (!socketInitializedRef.current && id) {
         // console.log('Initializing socket from data loader');
@@ -313,6 +317,12 @@ const ResumeBuilder = () => {
             data={resumeData.position} 
             onChange={dataHandlers.handlePositionsOfResponsibilityChange} 
           />
+          <div className="customizer-pane">
+            <ResumeCustomizer
+              sections={sections}
+              onSectionOrderChange={dataHandlers.handleSectionOrderChange}
+            />
+        </div>
         </div>
 
         {/* Middle Panel - Preview */}
@@ -322,7 +332,7 @@ const ResumeBuilder = () => {
             style={{ transform: `scale(${zoomLevel / 100})` }}
           >
             <div>
-              <TemplateComponent data={resumeData} styles={globalStyles} />
+              <TemplateComponent data={resumeData} styles={globalStyles} sectionOrder={sectionOrder} />
             </div>
           </div>
         </div>

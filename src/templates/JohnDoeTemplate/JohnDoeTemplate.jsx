@@ -2,7 +2,7 @@ import React from 'react';
 import { usePageBreak, PageBreakWrapper } from '../../Components/FormSections/ResumeLayout/ResumeLayout';
 import './JohnDoeTemplate.css';
 
-const JohnDoeTemplate = ({ data, styles = {} }) => {
+const JohnDoeTemplate = ({ data, styles = {}, sectionOrder = [] }) => {
   // Default global styles if not provided
   const defaultGlobalStyles = {
     heading: {
@@ -43,8 +43,8 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
   };
 
   const renderContent = () => {
-    const allElements = [
-      // Header with Name and Contact Info - Left aligned
+    const topElements = [
+      // Header with Name and Contact Info - Always at the top
       <div key="header" className="johndoe-header">
         <h1 className="johndoe-name" style={getTextStyle('heading')}>
           {data.personalInfo.name || 'John Doe'}
@@ -74,21 +74,18 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
       </div>
     ];
 
-    // Welcome/Objective Section
-    if (data.objective) {
-      allElements.push(
+    // 1. Define rendering logic for each section in a map.
+    const sectionRenderers = {
+      objective: () => (data.objective) ? [
         <div key="objective-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Welcome to RenderCV!</h2>
           <div className="johndoe-section-content" style={getTextStyle('description')}>
             <p>{data.objective}</p>
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Education
-    if (data.education.length > 0) {
-      allElements.push(
+      education: () => (data.education && data.education.length > 0) ? [
         <div key="education-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Education</h2>
           <div className="johndoe-section-content">
@@ -114,12 +111,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Experience/Internships
-    if (data.internships.length > 0) {
-      allElements.push(
+      internships: () => (data.internships && data.internships.length > 0) ? [
         <div key="experience-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Experience</h2>
           <div className="johndoe-section-content">
@@ -140,12 +134,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Publications
-    if (data.publications && data.publications.length > 0) {
-      allElements.push(
+      publications: () => (data.publications && data.publications.length > 0) ? [
         <div key="publications-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Publications</h2>
           <div className="johndoe-section-content">
@@ -165,31 +156,28 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Projects
-    if (data.projects.length > 0) {
-      allElements.push(
+      projects: () => (data.projects && data.projects.length > 0) ? [
         <div key="projects-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Projects</h2>
           <div className="johndoe-section-content">
             {data.projects.map((project, idx) => (
               <div key={idx} className="johndoe-project-item">
                 <div className="johndoe-item-header">
-                <span style={getTextStyle('heading')}>
+                  <span style={getTextStyle('heading')}>
                     {project.title}
                     {project.url && (
                         <>
-                        {" | "}
-                        <a
+                          {" | "}
+                          <a
                             href={project.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: 'inherit', textDecoration: 'none' }} // Optional styling
-                        >
+                            style={{ color: 'inherit', textDecoration: 'none' }}
+                          >
                             GitHub Repository
-                        </a>
+                          </a>
                         </>
                     )}
                     </span>
@@ -206,12 +194,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
-
-    // Skills
-    if (data.skills && data.skills.length > 0) {
-      allElements.push(
+      ] : [],
+      
+      skills: () => (data.skills && data.skills.length > 0) ? [
         <div key="skills-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Technical Skills</h2>
           <div className="johndoe-section-content">
@@ -222,12 +207,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Awards
-    if (data.awards.length > 0) {
-      allElements.push(
+      awards: () => (data.awards && data.awards.length > 0) ? [
         <div key="awards-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Awards and Achievements</h2>
           <div className="johndoe-section-content">
@@ -240,12 +222,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             </ul>
           </div>
         </div>
-      );
-    }
-
-    // Competitions
-    if (data.competitions && data.competitions.length > 0) {
-      allElements.push(
+      ] : [],
+      
+      competitions: () => (data.competitions && data.competitions.length > 0) ? [
         <div key="competitions-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Competitions</h2>
           <div className="johndoe-section-content">
@@ -264,12 +243,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Positions of Responsibility
-    if (data.position && data.position.length > 0) {
-      allElements.push(
+      position: () => (data.position && data.position.length > 0) ? [
         <div key="position-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Leadership Experience</h2>
           <div className="johndoe-section-content">
@@ -288,12 +264,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             ))}
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Extra Academic Activities
-    if (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) {
-      allElements.push(
+      extraAcademicActivities: () => (data.extraAcademicActivities && data.extraAcademicActivities.length > 0) ? [
         <div key="extra-activities-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Additional Activities</h2>
           <div className="johndoe-section-content">
@@ -307,12 +280,9 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             </ul>
           </div>
         </div>
-      );
-    }
+      ] : [],
 
-    // Coursework Information
-    if (data.coursework.length > 0) {
-      allElements.push(
+      coursework: () => (data.coursework && data.coursework.length > 0) ? [
         <div key="coursework-section" className="johndoe-section">
           <h2 className="johndoe-section-title" style={getTextStyle('heading')}>Relevant Coursework</h2>
           <div className="johndoe-section-content">
@@ -326,10 +296,29 @@ const JohnDoeTemplate = ({ data, styles = {} }) => {
             </ul>
           </div>
         </div>
-      );
-    }
+      ] : [],
+    };
 
-    return allElements;
+    // 2. Define the default order of sections.
+    const defaultOrder = [
+      'objective', 'education', 'internships', 'publications', 'projects', 'skills', 
+      'awards', 'competitions', 'position', 'extraAcademicActivities', 'coursework'
+    ];
+
+    // Use the user-provided order, or the default one.
+    const finalOrder = sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+
+    // 3. Build the elements array by iterating through the specified order.
+    const orderedElements = [];
+    finalOrder.forEach(sectionKey => {
+      if (sectionRenderers[sectionKey]) {
+        const elements = sectionRenderers[sectionKey]();
+        orderedElements.push(...elements);
+      }
+    });
+
+    // Combine the static top elements with the dynamically ordered sections.
+    return [...topElements, ...orderedElements];
   };
 
   const allElements = renderContent();
